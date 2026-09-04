@@ -1,0 +1,2816 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#08080d">
+<title>SVT BANK</title>
+
+<style>
+:root{
+    --bg:#07070b;
+    --bg2:#101017;
+    --card:#12121a;
+    --card2:#191923;
+    --text:#fff;
+    --muted:#8d8d9d;
+    --accent:#7c5cff;
+    --accent2:#a68cff;
+    --green:#39e58c;
+    --red:#ff5268;
+    --yellow:#ffc857;
+    --border:rgba(255,255,255,.08);
+    --shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
+    "Segoe UI",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow:hidden;
+}
+
+button,input{
+    font:inherit;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+}
+
+.app{
+    width:100%;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(124,92,255,.16),transparent 30%),
+        radial-gradient(circle at 100% 100%,rgba(0,180,255,.08),transparent 30%),
+        var(--bg);
+}
+
+/* ================= AUTH ================= */
+
+.auth{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:100;
+    background:
+        radial-gradient(circle at 50% 0%,rgba(124,92,255,.25),transparent 40%),
+        var(--bg);
+}
+
+.auth-box{
+    width:100%;
+    max-width:430px;
+    padding:30px;
+    border:1px solid var(--border);
+    border-radius:32px;
+    background:rgba(18,18,26,.82);
+    backdrop-filter:blur(30px);
+    box-shadow:var(--shadow);
+    animation:authIn .7s ease;
+}
+
+@keyframes authIn{
+    from{
+        opacity:0;
+        transform:translateY(30px) scale(.96);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.logo{
+    text-align:center;
+    font-weight:900;
+    font-size:34px;
+    letter-spacing:-2px;
+    margin-bottom:6px;
+}
+
+.logo span{
+    color:var(--accent);
+}
+
+.auth-sub{
+    text-align:center;
+    color:var(--muted);
+    margin-bottom:28px;
+}
+
+.input{
+    width:100%;
+    height:54px;
+    border:1px solid var(--border);
+    border-radius:17px;
+    background:var(--card2);
+    color:var(--text);
+    padding:0 17px;
+    outline:none;
+    margin-bottom:12px;
+    transition:.2s;
+}
+
+.input:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(124,92,255,.15);
+}
+
+.primary{
+    width:100%;
+    min-height:54px;
+    border-radius:17px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:white;
+    font-weight:800;
+    box-shadow:0 12px 30px rgba(124,92,255,.25);
+    transition:.2s;
+}
+
+.primary:active{
+    transform:scale(.97);
+}
+
+.secondary{
+    width:100%;
+    min-height:50px;
+    border-radius:16px;
+    background:var(--card2);
+    color:var(--text);
+    border:1px solid var(--border);
+    font-weight:700;
+}
+
+.auth-switch{
+    margin-top:18px;
+    text-align:center;
+    color:var(--muted);
+}
+
+.auth-switch span{
+    color:var(--accent2);
+    font-weight:700;
+    cursor:pointer;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    display:none;
+    width:100%;
+    height:100%;
+    position:relative;
+}
+
+.content{
+    position:absolute;
+    inset:0;
+    bottom:78px;
+    overflow-y:auto;
+    padding:20px 16px 35px;
+    scrollbar-width:none;
+}
+
+.content::-webkit-scrollbar{
+    display:none;
+}
+
+.page{
+    display:none;
+    max-width:700px;
+    margin:auto;
+    animation:pageIn .35s ease;
+}
+
+.page.active{
+    display:block;
+}
+
+@keyframes pageIn{
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.top h1{
+    font-size:28px;
+    margin:0;
+    letter-spacing:-1px;
+}
+
+.avatar{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    font-weight:900;
+    box-shadow:0 8px 25px rgba(124,92,255,.25);
+}
+
+/* BALANCE */
+
+.balance-card{
+    position:relative;
+    overflow:hidden;
+    padding:26px;
+    border-radius:28px;
+    background:
+        radial-gradient(circle at 90% 0%,rgba(255,255,255,.16),transparent 30%),
+        linear-gradient(135deg,var(--accent),#332080);
+    box-shadow:0 20px 50px rgba(0,0,0,.3);
+    margin-bottom:16px;
+}
+
+.balance-card:after{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.1);
+    right:-80px;
+    bottom:-80px;
+}
+
+.balance-label{
+    opacity:.75;
+    font-size:14px;
+}
+
+.balance{
+    font-size:42px;
+    font-weight:900;
+    letter-spacing:-2px;
+    margin:5px 0 22px;
+}
+
+.balance-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.balance-actions button{
+    height:48px;
+    border-radius:15px;
+    background:rgba(255,255,255,.15);
+    color:white;
+    font-weight:800;
+    backdrop-filter:blur(10px);
+}
+
+/* CARDS */
+
+.virtual-card{
+    height:210px;
+    padding:25px;
+    border-radius:27px;
+    position:relative;
+    overflow:hidden;
+    background:
+        linear-gradient(135deg,#19191f,#30303a);
+    border:1px solid rgba(255,255,255,.1);
+    box-shadow:var(--shadow);
+    margin-bottom:18px;
+}
+
+.virtual-card:before{
+    content:"";
+    position:absolute;
+    width:250px;
+    height:250px;
+    border-radius:50%;
+    background:rgba(124,92,255,.18);
+    right:-80px;
+    top:-100px;
+}
+
+.card-bank{
+    font-weight:900;
+    font-size:18px;
+}
+
+.card-chip{
+    width:45px;
+    height:34px;
+    border-radius:9px;
+    margin-top:35px;
+    background:linear-gradient(135deg,#d5d5d5,#777);
+}
+
+.card-number{
+    font-size:20px;
+    letter-spacing:2px;
+    margin-top:22px;
+}
+
+.card-owner{
+    font-size:12px;
+    opacity:.65;
+    margin-top:8px;
+    text-transform:uppercase;
+}
+
+/* SECTIONS */
+
+.section{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:18px;
+    margin-bottom:16px;
+    box-shadow:0 10px 35px rgba(0,0,0,.15);
+}
+
+.section-title{
+    font-weight:850;
+    font-size:17px;
+    margin-bottom:14px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+}
+
+.stat-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.stat{
+    padding:18px;
+    border-radius:20px;
+    background:var(--card2);
+}
+
+.stat-label{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.stat-value{
+    margin-top:6px;
+    font-size:21px;
+    font-weight:850;
+}
+
+.green{
+    color:var(--green);
+}
+
+.red{
+    color:var(--red);
+}
+
+/* TRANSACTIONS */
+
+.tx{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:13px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.tx:last-child{
+    border-bottom:0;
+}
+
+.tx-icon{
+    width:43px;
+    height:43px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--card2);
+}
+
+.tx-info{
+    flex:1;
+}
+
+.tx-title{
+    font-weight:700;
+}
+
+.tx-date{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:3px;
+}
+
+.tx-amount{
+    font-weight:800;
+}
+
+/* NAV */
+
+.nav{
+    position:absolute;
+    z-index:30;
+    bottom:0;
+    left:0;
+    right:0;
+    height:78px;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    padding:8px 7px env(safe-area-inset-bottom);
+    background:rgba(10,10,15,.85);
+    backdrop-filter:blur(25px);
+    border-top:1px solid var(--border);
+}
+
+.nav-btn{
+    flex:1;
+    max-width:110px;
+    height:58px;
+    border-radius:18px;
+    background:transparent;
+    color:var(--muted);
+    transition:.25s;
+    font-size:11px;
+    font-weight:700;
+}
+
+.nav-icon{
+    display:block;
+    font-size:22px;
+    margin-bottom:3px;
+}
+
+.nav-btn.active{
+    color:var(--accent2);
+    background:rgba(124,92,255,.12);
+}
+
+/* ================= CLICKER ================= */
+
+.clicker-box{
+    text-align:center;
+}
+
+.coin{
+    width:190px;
+    height:190px;
+    margin:25px auto;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:70px;
+    background:
+        radial-gradient(circle at 35% 30%,#ffeaa0,#e0a52a 55%,#8e5d00);
+    border:8px solid #f2c95e;
+    box-shadow:
+        0 0 0 8px rgba(255,200,80,.08),
+        0 25px 70px rgba(255,170,30,.2);
+    user-select:none;
+    transition:.12s;
+}
+
+.coin:active{
+    transform:scale(.88) rotate(-5deg);
+}
+
+.coin.pop{
+    animation:coinPop .3s ease;
+}
+
+@keyframes coinPop{
+    0%{transform:scale(1)}
+    45%{transform:scale(1.18) rotate(5deg)}
+    100%{transform:scale(1)}
+}
+
+.click-count{
+    font-size:32px;
+    font-weight:900;
+}
+
+/* ================= MINES ================= */
+
+.game-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.game-balance{
+    color:var(--green);
+    font-weight:900;
+}
+
+.mines-settings{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.field-label{
+    display:block;
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:6px;
+}
+
+.mine-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:8px;
+    margin:15px 0;
+}
+
+.mine-cell{
+    aspect-ratio:1;
+    border-radius:15px;
+    background:var(--card2);
+    border:1px solid var(--border);
+    color:white;
+    font-size:23px;
+    transition:.2s;
+}
+
+.mine-cell:not(.open):active{
+    transform:scale(.92);
+}
+
+.mine-cell.safe{
+    background:rgba(57,229,140,.13);
+    border-color:rgba(57,229,140,.3);
+    animation:safeIn .3s ease;
+}
+
+.mine-cell.bomb{
+    background:rgba(255,82,104,.15);
+    border-color:rgba(255,82,104,.35);
+    animation:bomb .45s ease;
+}
+
+@keyframes safeIn{
+    0%{transform:scale(.7);opacity:.4}
+    100%{transform:scale(1);opacity:1}
+}
+
+@keyframes bomb{
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-7px)}
+    50%{transform:translateX(7px)}
+    75%{transform:translateX(-4px)}
+}
+
+.potential{
+    text-align:center;
+    font-size:18px;
+    font-weight:800;
+    margin:12px 0;
+}
+
+.cashout{
+    width:100%;
+    height:54px;
+    border-radius:17px;
+    background:linear-gradient(135deg,var(--green),#18a967);
+    color:#06150d;
+    font-weight:900;
+    transition:.2s;
+}
+
+.cashout:disabled{
+    opacity:.3;
+    filter:grayscale(1);
+}
+
+/* ================= PROFILE ================= */
+
+.profile-head{
+    text-align:center;
+    padding:20px 0;
+}
+
+.big-avatar{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    font-weight:900;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    box-shadow:0 15px 40px rgba(124,92,255,.3);
+}
+
+.profile-name{
+    font-size:25px;
+    font-weight:900;
+    margin-top:12px;
+}
+
+.profile-login{
+    color:var(--muted);
+}
+
+.theme-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:9px;
+}
+
+.theme-btn{
+    min-height:48px;
+    border-radius:14px;
+    background:var(--card2);
+    color:var(--text);
+    border:1px solid var(--border);
+    font-weight:700;
+}
+
+.theme-btn.active{
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px rgba(124,92,255,.12);
+}
+
+/* ================= MODALS ================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:200;
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    background:rgba(0,0,0,.55);
+    backdrop-filter:blur(8px);
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    width:100%;
+    max-width:600px;
+    padding:22px;
+    border-radius:30px 30px 0 0;
+    background:var(--bg2);
+    border:1px solid var(--border);
+    animation:modalIn .3s ease;
+}
+
+@keyframes modalIn{
+    from{transform:translateY(100%)}
+    to{transform:none}
+}
+
+.modal-title{
+    font-size:21px;
+    font-weight:900;
+    margin-bottom:17px;
+}
+
+/* ================= TOAST ================= */
+
+.toast{
+    position:fixed;
+    z-index:500;
+    left:50%;
+    bottom:95px;
+    transform:translate(-50%,20px);
+    opacity:0;
+    pointer-events:none;
+    padding:13px 18px;
+    border-radius:15px;
+    background:#20202a;
+    border:1px solid var(--border);
+    box-shadow:0 15px 40px rgba(0,0,0,.3);
+    transition:.3s;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translate(-50%,0);
+}
+
+/* ================= LIGHT ================= */
+
+body.light{
+    --bg:#f3f4f8;
+    --bg2:#ffffff;
+    --card:#ffffff;
+    --card2:#eef0f5;
+    --text:#171820;
+    --muted:#747785;
+    --border:rgba(0,0,0,.08);
+}
+
+body.light .nav{
+    background:rgba(255,255,255,.85);
+}
+
+body.light .virtual-card{
+    background:linear-gradient(135deg,#22232b,#4b4d59);
+}
+
+/* ================= THEMES ================= */
+
+body.purple{
+    --accent:#9b5cff;
+    --accent2:#d28cff;
+}
+
+body.red{
+    --accent:#ff365d;
+    --accent2:#ff806f;
+}
+
+body.green{
+    --accent:#16c784;
+    --accent2:#73f2b8;
+}
+
+body.blue{
+    --accent:#278cff;
+    --accent2:#65c7ff;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:380px){
+    .balance{
+        font-size:35px;
+    }
+
+    .coin{
+        width:160px;
+        height:160px;
+    }
+
+    .mine-cell{
+        border-radius:11px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- ================= AUTH ================= -->
+
+<div class="auth" id="auth">
+
+    <div class="auth-box">
+
+        <div class="logo">SVT<span>BANK</span></div>
+        <div class="auth-sub" id="authSub">
+            Создайте банковский аккаунт
+        </div>
+
+        <div id="registerForm">
+
+            <input class="input"
+                   id="regFirst"
+                   placeholder="Имя">
+
+            <input class="input"
+                   id="regLast"
+                   placeholder="Фамилия">
+
+            <input class="input"
+                   id="regLogin"
+                   placeholder="Логин"
+                   autocomplete="username">
+
+            <input class="input"
+                   id="regPass"
+                   placeholder="Пароль"
+                   type="password"
+                   autocomplete="new-password">
+
+            <button class="primary" onclick="register()">
+                СОЗДАТЬ АККАУНТ
+            </button>
+
+            <div class="auth-switch">
+                Уже есть аккаунт?
+                <span onclick="showLogin()">Войти</span>
+            </div>
+
+        </div>
+
+        <div id="loginForm" style="display:none">
+
+            <input class="input"
+                   id="login"
+                   placeholder="Логин"
+                   autocomplete="username">
+
+            <input class="input"
+                   id="pass"
+                   placeholder="Пароль"
+                   type="password"
+                   autocomplete="current-password">
+
+            <button class="primary" onclick="loginUser()">
+                ВОЙТИ
+            </button>
+
+            <div class="auth-switch">
+                Нет аккаунта?
+                <span onclick="showRegister()">Регистрация</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= MAIN ================= -->
+
+<div class="main" id="main">
+
+<div class="content">
+
+<!-- HOME -->
+
+<section class="page active" id="page-home">
+
+    <div class="top">
+        <div>
+            <div style="color:var(--muted);font-size:13px">
+                Добрый день
+            </div>
+
+            <h1 id="helloName">Пользователь</h1>
+        </div>
+
+        <div class="avatar" id="topAvatar">
+            ?
+        </div>
+    </div>
+
+    <div class="balance-card">
+
+        <div class="balance-label">
+            Доступный баланс
+        </div>
+
+        <div class="balance" id="mainBalance">
+            0 ₽
+        </div>
+
+        <div class="balance-actions">
+
+            <button onclick="openTopup()">
+                ＋ Пополнить
+            </button>
+
+            <button onclick="openTransfer()">
+                ↗ Перевести
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="homeCard"></div>
+
+    <div class="stat-grid">
+
+        <div class="stat">
+            <div class="stat-label">
+                Доходы
+            </div>
+
+            <div class="stat-value green"
+                 id="homeIncome">
+                0 ₽
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">
+                Расходы
+            </div>
+
+            <div class="stat-value red"
+                 id="homeExpense">
+                0 ₽
+            </div>
+        </div>
+
+    </div>
+
+    <div class="section" style="margin-top:16px">
+
+        <div class="section-title">
+            Последние операции
+        </div>
+
+        <div id="homeTransactions"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ANALYTICS -->
+
+<section class="page" id="page-analytics">
+
+    <div class="top">
+        <h1>Аналитика</h1>
+    </div>
+
+    <div class="stat-grid">
+
+        <div class="stat">
+            <div class="stat-label">
+                Всего доходов
+            </div>
+            <div class="stat-value green"
+                 id="analyticsIncome">
+                0 ₽
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">
+                Всего расходов
+            </div>
+            <div class="stat-value red"
+                 id="analyticsExpense">
+                0 ₽
+            </div>
+        </div>
+
+    </div>
+
+    <div class="section" style="margin-top:16px">
+
+        <div class="section-title">
+            Баланс
+        </div>
+
+        <div style="
+            height:180px;
+            display:flex;
+            align-items:end;
+            gap:8px;
+            padding-top:20px;
+        " id="chart"></div>
+
+    </div>
+
+    <div class="section">
+
+        <div class="section-title">
+            Все операции
+        </div>
+
+        <div id="allTransactions"></div>
+
+    </div>
+
+</section>
+
+
+<!-- CLICKER -->
+
+<section class="page" id="page-clicker">
+
+    <div class="top">
+        <h1>Кликер</h1>
+
+        <div class="game-balance"
+             id="clickerBalance">
+            0 ₽
+        </div>
+    </div>
+
+    <div class="section clicker-box">
+
+        <div class="section-title">
+            Заработок
+        </div>
+
+        <div style="color:var(--muted)">
+            За каждый клик +1 ₽
+        </div>
+
+        <div class="coin"
+             id="coin"
+             onclick="clickCoin(event)">
+            ₽
+        </div>
+
+        <div class="click-count"
+             id="clickCount">
+            0 ₽
+        </div>
+
+        <div style="color:var(--muted);margin-top:5px">
+            заработано через кликер
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- CASINO -->
+
+<section class="page" id="page-casino">
+
+    <div class="top">
+
+        <h1>Mines</h1>
+
+        <div class="game-balance"
+             id="casinoBalance">
+            0 ₽
+        </div>
+
+    </div>
+
+    <div class="section">
+
+        <div class="game-head">
+            <div>
+                <b>Сапёр</b>
+                <div style="color:var(--muted);font-size:12px">
+                    Найдите безопасные клетки
+                </div>
+            </div>
+
+            <div>
+                💎
+            </div>
+        </div>
+
+        <div class="mines-settings">
+
+            <div>
+                <label class="field-label">
+                    Ставка
+                </label>
+
+                <input class="input"
+                       id="bet"
+                       type="number"
+                       min="1"
+                       value="100"
+                       style="margin:0">
+            </div>
+
+            <div>
+                <label class="field-label">
+                    Мин
+                </label>
+
+                <input class="input"
+                       id="mineCount"
+                       type="number"
+                       min="1"
+                       max="24"
+                       value="3"
+                       style="margin:0">
+            </div>
+
+        </div>
+
+        <button class="primary"
+                style="margin-top:12px"
+                onclick="startMines()">
+            НАЧАТЬ ИГРУ
+        </button>
+
+        <div class="mine-grid"
+             id="mineGrid"></div>
+
+        <div class="potential"
+             id="potential">
+            Потенциальный выигрыш: 0 ₽
+        </div>
+
+        <button class="cashout"
+                id="cashout"
+                disabled
+                onclick="cashout()">
+            ЗАБРАТЬ ВЫИГРЫШ
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section class="page" id="page-profile">
+
+    <div class="top">
+        <h1>Профиль</h1>
+    </div>
+
+    <div class="profile-head">
+
+        <div class="big-avatar"
+             id="bigAvatar">
+            ?
+        </div>
+
+        <div class="profile-name"
+             id="profileName">
+            Пользователь
+        </div>
+
+        <div class="profile-login"
+             id="profileLogin">
+            @user
+        </div>
+
+    </div>
+
+    <div class="section">
+
+        <div class="section-title">
+            Виртуальная карта
+        </div>
+
+        <div id="profileCard"></div>
+
+        <button class="primary"
+                id="cardButton"
+                onclick="createCard()">
+            ВЫПУСТИТЬ ВИРТУАЛЬНУЮ КАРТУ
+        </button>
+
+    </div>
+
+    <div class="section">
+
+        <div class="section-title">
+            Тема приложения
+        </div>
+
+        <div class="theme-grid">
+
+            <button class="theme-btn"
+                    onclick="setTheme('dark')">
+                🌑 Тёмная
+            </button>
+
+            <button class="theme-btn"
+                    onclick="setTheme('light')">
+                ☀️ Светлая
+            </button>
+
+            <button class="theme-btn"
+                    onclick="setTheme('purple')">
+                🟣 Фиолетовая
+            </button>
+
+            <button class="theme-btn"
+                    onclick="setTheme('red')">
+                🔴 Красная
+            </button>
+
+            <button class="theme-btn"
+                    onclick="setTheme('green')">
+                🟢 Зелёная
+            </button>
+
+            <button class="theme-btn"
+                    onclick="setTheme('blue')">
+                🔵 Синяя
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="section">
+
+        <button class="secondary"
+                onclick="logout()">
+            Выйти из аккаунта
+        </button>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<!-- NAV -->
+
+<nav class="nav">
+
+    <button class="nav-btn active"
+            onclick="openPage('home',this)">
+        <span class="nav-icon">⌂</span>
+        Главная
+    </button>
+
+    <button class="nav-btn"
+            onclick="openPage('analytics',this)">
+        <span class="nav-icon">◒</span>
+        Аналитика
+    </button>
+
+    <button class="nav-btn"
+            onclick="openPage('clicker',this)">
+        <span class="nav-icon">₽</span>
+        Заработок
+    </button>
+
+    <button class="nav-btn"
+            onclick="openPage('casino',this)">
+        <span class="nav-icon">💣</span>
+        Игры
+    </button>
+
+    <button class="nav-btn"
+            onclick="openPage('profile',this)">
+        <span class="nav-icon">●</span>
+        Профиль
+    </button>
+
+</nav>
+
+</div>
+
+
+<!-- ================= TOPUP MODAL ================= -->
+
+<div class="modal" id="topupModal">
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            Пополнение
+        </div>
+
+        <div id="topupContent"></div>
+
+        <input class="input"
+               id="topupAmount"
+               type="number"
+               placeholder="Сумма">
+
+        <button class="primary"
+                onclick="topup()">
+            ПОПОЛНИТЬ
+        </button>
+
+        <button class="secondary"
+                style="margin-top:9px"
+                onclick="closeModal('topupModal')">
+            Отмена
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ================= TRANSFER MODAL ================= -->
+
+<div class="modal" id="transferModal">
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            Перевод
+        </div>
+
+        <input class="input"
+               id="transferLogin"
+               placeholder="Логин получателя">
+
+        <input class="input"
+               id="transferAmount"
+               type="number"
+               placeholder="Сумма">
+
+        <button class="primary"
+                onclick="transfer()">
+            ПЕРЕВЕСТИ
+        </button>
+
+        <button class="secondary"
+                style="margin-top:9px"
+                onclick="closeModal('transferModal')">
+            Отмена
+        </button>
+
+    </div>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SVT BANK
+========================================================= */
+
+const USERS_KEY = "SVTBANK_USERS_V3";
+const SESSION_KEY = "SVTBANK_SESSION_V3";
+
+let users = JSON.parse(
+    localStorage.getItem(USERS_KEY) || "[]"
+);
+
+let session = localStorage.getItem(SESSION_KEY);
+
+let mines = [];
+let mineActive = false;
+let canCashout = false;
+
+let mineBet = 0;
+let safeOpened = 0;
+let potentialWin = 0;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function saveUsers(){
+
+    localStorage.setItem(
+        USERS_KEY,
+        JSON.stringify(users)
+    );
+
+}
+
+function user(){
+
+    return users.find(
+        u => u.id === session
+    );
+
+}
+
+function save(){
+
+    saveUsers();
+    update();
+
+}
+
+function money(value){
+
+    return Number(value || 0)
+        .toLocaleString("ru-RU") + " ₽";
+
+}
+
+function now(){
+
+    return new Date().toLocaleString(
+        "ru-RU",
+        {
+            day:"2-digit",
+            month:"2-digit",
+            hour:"2-digit",
+            minute:"2-digit"
+        }
+    );
+
+}
+
+function toast(message){
+
+    const t =
+        document.getElementById("toast");
+
+    t.textContent = message;
+    t.classList.add("show");
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer =
+        setTimeout(
+            ()=>t.classList.remove("show"),
+            2200
+        );
+
+}
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+function showLogin(){
+
+    document.getElementById(
+        "registerForm"
+    ).style.display="none";
+
+    document.getElementById(
+        "loginForm"
+    ).style.display="block";
+
+    document.getElementById(
+        "authSub"
+    ).textContent="Войдите в свой аккаунт";
+
+}
+
+function showRegister(){
+
+    document.getElementById(
+        "loginForm"
+    ).style.display="none";
+
+    document.getElementById(
+        "registerForm"
+    ).style.display="block";
+
+    document.getElementById(
+        "authSub"
+    ).textContent="Создайте банковский аккаунт";
+
+}
+
+function register(){
+
+    const first =
+        document.getElementById("regFirst")
+        .value.trim();
+
+    const last =
+        document.getElementById("regLast")
+        .value.trim();
+
+    const login =
+        document.getElementById("regLogin")
+        .value.trim();
+
+    const pass =
+        document.getElementById("regPass")
+        .value;
+
+    if(!first || !last || !login || !pass){
+
+        toast("Заполните все поля");
+        return;
+
+    }
+
+    if(login.length < 3){
+
+        toast("Логин слишком короткий");
+        return;
+
+    }
+
+    if(pass.length < 4){
+
+        toast("Пароль минимум 4 символа");
+        return;
+
+    }
+
+    if(users.some(
+        u => u.login.toLowerCase() === login.toLowerCase()
+    )){
+
+        toast("Такой логин уже существует");
+        return;
+
+    }
+
+    const newUser = {
+
+        id:
+            "u_" +
+            Math.random()
+                .toString(36)
+                .slice(2,11),
+
+        first,
+        last,
+        login,
+        pass,
+
+        balance:0,
+
+        income:0,
+        expense:0,
+
+        clicker:0,
+
+        card:null,
+
+        theme:"dark",
+
+        tx:[]
+
+    };
+
+    users.push(newUser);
+
+    session = newUser.id;
+
+    localStorage.setItem(
+        SESSION_KEY,
+        session
+    );
+
+    saveUsers();
+
+    openApp();
+
+    toast("Аккаунт создан");
+
+}
+
+
+function loginUser(){
+
+    const login =
+        document.getElementById("login")
+        .value.trim();
+
+    const pass =
+        document.getElementById("pass")
+        .value;
+
+    const found =
+        users.find(
+            u =>
+                u.login.toLowerCase() ===
+                login.toLowerCase() &&
+                u.pass === pass
+        );
+
+    if(!found){
+
+        toast("Неверный логин или пароль");
+        return;
+
+    }
+
+    session = found.id;
+
+    localStorage.setItem(
+        SESSION_KEY,
+        session
+    );
+
+    openApp();
+
+    toast("Добро пожаловать");
+
+}
+
+
+function logout(){
+
+    session = null;
+
+    localStorage.removeItem(
+        SESSION_KEY
+    );
+
+    location.reload();
+
+}
+
+
+function openApp(){
+
+    document.getElementById(
+        "auth"
+    ).style.display="none";
+
+    document.getElementById(
+        "main"
+    ).style.display="block";
+
+    applyTheme();
+    update();
+
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+function cardHTML(){
+
+    const u = user();
+
+    if(!u || !u.card){
+
+        return `
+        <div class="section"
+             style="text-align:center;color:var(--muted)">
+            У вас пока нет виртуальной карты.
+        </div>
+        `;
+
+    }
+
+    return `
+
+    <div class="virtual-card">
+
+        <div class="card-bank">
+            SVT BANK
+        </div>
+
+        <div class="card-chip"></div>
+
+        <div class="card-number">
+            ${u.card}
+        </div>
+
+        <div class="card-owner">
+            ${u.first} ${u.last}
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+
+function createCard(){
+
+    const u = user();
+
+    if(u.card){
+
+        toast("Карта уже выпущена");
+        return;
+
+    }
+
+    const random =
+        () => Math.floor(
+            1000 +
+            Math.random()*9000
+        );
+
+    u.card =
+        "4276 " +
+        random() + " " +
+        random() + " " +
+        random();
+
+    save();
+
+    toast("Виртуальная карта выпущена");
+
+}
+
+
+/* =========================================================
+   TOP UP
+========================================================= */
+
+function openTopup(){
+
+    const u = user();
+
+    if(!u.card){
+
+        toast("Сначала выпустите виртуальную карту");
+        openPageByName("profile");
+        return;
+
+    }
+
+    document.getElementById(
+        "topupContent"
+    ).innerHTML = `
+
+        <div style="
+            padding:14px;
+            border-radius:16px;
+            background:var(--card);
+            margin-bottom:14px;
+        ">
+            Карта: <b>${u.card}</b>
+        </div>
+
+    `;
+
+    document.getElementById(
+        "topupModal"
+    ).classList.add("show");
+
+}
+
+
+function topup(){
+
+    const u = user();
+
+    const amount =
+        Number(
+            document.getElementById(
+                "topupAmount"
+            ).value
+        );
+
+    if(!u.card){
+
+        toast("Нет виртуальной карты");
+        return;
+
+    }
+
+    if(amount <= 0){
+
+        toast("Введите сумму");
+        return;
+
+    }
+
+    u.balance += amount;
+    u.income += amount;
+
+    addTx(
+        "＋",
+        "Пополнение",
+        "Пополнение карты",
+        amount,
+        "plus"
+    );
+
+    document.getElementById(
+        "topupAmount"
+    ).value="";
+
+    closeModal("topupModal");
+
+    save();
+
+    toast("Баланс пополнен");
+
+}
+
+
+/* =========================================================
+   TRANSFERS
+========================================================= */
+
+function openTransfer(){
+
+    document.getElementById(
+        "transferModal"
+    ).classList.add("show");
+
+}
+
+
+function transfer(){
+
+    const from = user();
+
+    const login =
+        document.getElementById(
+            "transferLogin"
+        ).value.trim();
+
+    const amount =
+        Number(
+            document.getElementById(
+                "transferAmount"
+            ).value
+        );
+
+    if(!login || amount <= 0){
+
+        toast("Заполните данные");
+        return;
+
+    }
+
+    if(amount > from.balance){
+
+        toast("Недостаточно средств");
+        return;
+
+    }
+
+    const to =
+        users.find(
+            u =>
+                u.login.toLowerCase() ===
+                login.toLowerCase()
+        );
+
+    if(!to){
+
+        toast("Получатель не найден");
+        return;
+
+    }
+
+    if(to.id === from.id){
+
+        toast("Нельзя перевести себе");
+        return;
+
+    }
+
+    from.balance -= amount;
+    from.expense += amount;
+
+    to.balance += amount;
+    to.income += amount;
+
+    addTx(
+        "↗",
+        "Перевод",
+        "Перевод пользователю @" + to.login,
+        amount,
+        "minus"
+    );
+
+    const oldSession = session;
+
+    session = to.id;
+
+    addTx(
+        "↙",
+        "Перевод",
+        "Получение от @" + from.login,
+        amount,
+        "plus"
+    );
+
+    session = oldSession;
+
+    document.getElementById(
+        "transferLogin"
+    ).value="";
+
+    document.getElementById(
+        "transferAmount"
+    ).value="";
+
+    closeModal("transferModal");
+
+    saveUsers();
+    update();
+
+    toast("Перевод выполнен");
+
+}
+
+
+/* =========================================================
+   TRANSACTIONS
+========================================================= */
+
+function addTx(
+    icon,
+    title,
+    desc,
+    amount,
+    type
+){
+
+    const u = user();
+
+    u.tx.unshift({
+
+        icon,
+        title,
+        desc,
+        amount,
+        type,
+        date:now()
+
+    });
+
+    if(u.tx.length > 50){
+
+        u.tx = u.tx.slice(0,50);
+
+    }
+
+}
+
+
+/* =========================================================
+   CLICKER
+========================================================= */
+
+function clickCoin(e){
+
+    const u = user();
+
+    u.balance += 1;
+    u.income += 1;
+    u.clicker += 1;
+
+    const coin =
+        document.getElementById("coin");
+
+    coin.classList.remove("pop");
+
+    void coin.offsetWidth;
+
+    coin.classList.add("pop");
+
+    if(
+        u.clicker % 25 === 0
+    ){
+
+        addTx(
+            "₽",
+            "Кликер",
+            "Заработок",
+            25,
+            "plus"
+        );
+
+    }
+
+    save();
+
+}
+
+
+/* =========================================================
+   MINES
+========================================================= */
+
+function renderMines(){
+
+    const grid =
+        document.getElementById(
+            "mineGrid"
+        );
+
+    grid.innerHTML="";
+
+    for(let i=0;i<25;i++){
+
+        const b =
+            document.createElement("button");
+
+        b.className="mine-cell";
+        b.onclick=()=>openMine(i,b);
+
+        grid.appendChild(b);
+
+    }
+
+}
+
+
+function startMines(){
+
+    const u = user();
+
+    if(mineActive || canCashout){
+
+        toast("Сначала завершите текущую игру");
+        return;
+
+    }
+
+    const bet =
+        Number(
+            document.getElementById(
+                "bet"
+            ).value
+        );
+
+    const count =
+        Number(
+            document.getElementById(
+                "mineCount"
+            ).value
+        );
+
+    if(bet <= 0){
+
+        toast("Введите ставку");
+        return;
+
+    }
+
+    if(count < 1 || count > 24){
+
+        toast("Количество мин: 1–24");
+        return;
+
+    }
+
+    if(bet > u.balance){
+
+        toast("Недостаточно средств");
+        return;
+
+    }
+
+
+    /*
+       ВАЖНО:
+
+       Ставка списывается СРАЗУ.
+
+       Потенциальный выигрыш НЕ начисляется
+       на баланс до нажатия CASHOUT.
+    */
+
+    u.balance -= bet;
+    u.expense += bet;
+
+    addTx(
+        "💣",
+        "Mines",
+        "Ставка",
+        bet,
+        "minus"
+    );
+
+    mineBet = bet;
+
+    potentialWin = bet;
+
+    safeOpened = 0;
+
+    mineActive = true;
+
+    canCashout = false;
+
+    mines =
+        Array(25).fill(false);
+
+    let placed = 0;
+
+    while(placed < count){
+
+        const i =
+            Math.floor(
+                Math.random()*25
+            );
+
+        if(!mines[i]){
+
+            mines[i]=true;
+            placed++;
+
+        }
+
+    }
+
+    document.getElementById(
+        "potential"
+    ).textContent =
+        "Потенциальный выигрыш: " +
+        money(potentialWin);
+
+    document.getElementById(
+        "cashout"
+    ).disabled=true;
+
+    renderMines();
+
+    save();
+
+    toast(
+        "Игра началась • ставка " +
+        money(bet)
+    );
+
+}
+
+
+function openMine(i,b){
+
+    if(!mineActive){
+
+        return;
+
+    }
+
+    if(b.classList.contains("open")){
+
+        return;
+
+    }
+
+    b.classList.add("open");
+
+
+    /* МИНА */
+
+    if(mines[i]){
+
+        b.classList.add("bomb");
+
+        b.textContent="💣";
+
+        mineActive=false;
+
+        canCashout=false;
+
+        potentialWin=0;
+
+        document.getElementById(
+            "potential"
+        ).textContent =
+            "Потенциальный выигрыш: 0 ₽";
+
+        document.getElementById(
+            "cashout"
+        ).disabled=true;
+
+        revealMines();
+
+        save();
+
+        toast("💥 МИНА! Ставка проиграна");
+
+        return;
+
+    }
+
+
+    /* БЕЗОПАСНАЯ КЛЕТКА */
+
+    b.classList.add("safe");
+
+    b.textContent="💎";
+
+    safeOpened++;
+
+    const multiplier =
+        1 + (safeOpened * .35);
+
+    potentialWin =
+        Math.floor(
+            mineBet * multiplier
+        );
+
+    canCashout=true;
+
+    document.getElementById(
+        "potential"
+    ).textContent =
+        "Потенциальный выигрыш: " +
+        money(potentialWin);
+
+    document.getElementById(
+        "cashout"
+    ).disabled=false;
+
+    toast(
+        "Безопасно • x" +
+        multiplier.toFixed(2)
+    );
+
+    save();
+
+
+    /*
+       Если открыты все безопасные клетки,
+       игра заканчивается автоматически,
+       НО canCashout остаётся true.
+
+       Поэтому выигрыш всё ещё можно забрать.
+    */
+
+    const totalMines =
+        mines.filter(Boolean).length;
+
+    if(
+        safeOpened >=
+        25-totalMines
+    ){
+
+        mineActive=false;
+
+        toast(
+            "🎉 Все безопасные клетки!"
+        );
+
+    }
+
+}
+
+
+function revealMines(){
+
+    const cells =
+        document.querySelectorAll(
+            ".mine-cell"
+        );
+
+    mines.forEach(
+        (isMine,i)=>{
+
+            if(isMine){
+
+                cells[i].classList.add("open");
+
+                cells[i].classList.add("bomb");
+
+                cells[i].textContent="💣";
+
+            }
+
+        }
+    );
+
+}
+
+
+/*
+   ГЛАВНОЕ ИСПРАВЛЕНИЕ:
+
+   Деньги начисляются на основной balance
+   ТОЛЬКО здесь.
+*/
+
+function cashout(){
+
+    const u = user();
+
+    if(!canCashout){
+
+        toast("Нет выигрыша для забора");
+        return;
+
+    }
+
+    if(potentialWin <= mineBet){
+
+        toast("Откройте безопасную клетку");
+        return;
+
+    }
+
+    const reward =
+        potentialWin;
+
+    /*
+       Только теперь деньги возвращаются
+       на основной баланс.
+    */
+
+    u.balance += reward;
+
+    u.income += reward;
+
+    addTx(
+        "💎",
+        "Mines",
+        "Забран выигрыш",
+        reward,
+        "plus"
+    );
+
+    mineActive=false;
+    canCashout=false;
+
+    potentialWin=0;
+    safeOpened=0;
+
+    document.getElementById(
+        "potential"
+    ).textContent =
+        "Потенциальный выигрыш: 0 ₽";
+
+    document.getElementById(
+        "cashout"
+    ).disabled=true;
+
+    save();
+
+    toast(
+        "💰 Выигрыш забран: " +
+        money(reward)
+    );
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function openPage(name,btn){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            p => p.classList.remove("active")
+        );
+
+    document
+        .getElementById(
+            "page-"+name
+        )
+        .classList.add("active");
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(
+            b => b.classList.remove("active")
+        );
+
+    if(btn){
+
+        btn.classList.add("active");
+
+    }
+
+}
+
+
+function openPageByName(name){
+
+    const buttons =
+        document.querySelectorAll(
+            ".nav-btn"
+        );
+
+    const index = {
+        home:0,
+        analytics:1,
+        clicker:2,
+        casino:3,
+        profile:4
+    }[name];
+
+    openPage(
+        name,
+        buttons[index]
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE UI
+========================================================= */
+
+function update(){
+
+    const u = user();
+
+    if(!u){
+
+        return;
+
+    }
+
+
+    /* NAME */
+
+    document.getElementById(
+        "helloName"
+    ).textContent =
+        u.first;
+
+
+    /* BALANCE */
+
+    document.getElementById(
+        "mainBalance"
+    ).textContent =
+        money(u.balance);
+
+
+    document.getElementById(
+        "homeIncome"
+    ).textContent =
+        money(u.income);
+
+
+    document.getElementById(
+        "homeExpense"
+    ).textContent =
+        money(u.expense);
+
+
+    /* AVATAR */
+
+    const initials =
+        (
+            u.first[0] +
+            u.last[0]
+        ).toUpperCase();
+
+    document.getElementById(
+        "topAvatar"
+    ).textContent =
+        initials;
+
+    document.getElementById(
+        "bigAvatar"
+    ).textContent =
+        initials;
+
+
+    /* PROFILE */
+
+    document.getElementById(
+        "profileName"
+    ).textContent =
+        u.first + " " + u.last;
+
+    document.getElementById(
+        "profileLogin"
+    ).textContent =
+        "@" + u.login;
+
+
+    /* CARD */
+
+    document.getElementById(
+        "homeCard"
+    ).innerHTML =
+        cardHTML();
+
+    document.getElementById(
+        "profileCard"
+    ).innerHTML =
+        cardHTML();
+
+    document.getElementById(
+        "cardButton"
+    ).style.display =
+        u.card ? "none" : "block";
+
+
+    /* CLICKER */
+
+    document.getElementById(
+        "clickCount"
+    ).textContent =
+        money(u.clicker);
+
+    document.getElementById(
+        "clickerBalance"
+    ).textContent =
+        money(u.balance);
+
+
+    /*
+       CASINO ИСПОЛЬЗУЕТ ОСНОВНОЙ БАЛАНС
+    */
+
+    document.getElementById(
+        "casinoBalance"
+    ).textContent =
+        money(u.balance);
+
+
+    /* ANALYTICS */
+
+    document.getElementById(
+        "analyticsIncome"
+    ).textContent =
+        money(u.income);
+
+    document.getElementById(
+        "analyticsExpense"
+    ).textContent =
+        money(u.expense);
+
+
+    renderTransactions();
+
+    renderChart();
+
+}
+
+
+/* =========================================================
+   TRANSACTIONS RENDER
+========================================================= */
+
+function transactionHTML(t){
+
+    return `
+
+    <div class="tx">
+
+        <div class="tx-icon">
+            ${t.icon}
+        </div>
+
+        <div class="tx-info">
+
+            <div class="tx-title">
+                ${escapeHTML(t.title)}
+            </div>
+
+            <div class="tx-date">
+                ${escapeHTML(t.desc)}
+                ·
+                ${escapeHTML(t.date)}
+            </div>
+
+        </div>
+
+        <div class="tx-amount
+            ${t.type === "plus" ? "green":"red"}">
+
+            ${t.type === "plus" ? "+" : "-"}
+            ${money(t.amount)}
+
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+
+function renderTransactions(){
+
+    const u = user();
+
+    const home =
+        document.getElementById(
+            "homeTransactions"
+        );
+
+    const all =
+        document.getElementById(
+            "allTransactions"
+        );
+
+    if(!u.tx.length){
+
+        home.innerHTML =
+            `<div style="color:var(--muted)">
+                Пока нет операций
+            </div>`;
+
+        all.innerHTML =
+            `<div style="color:var(--muted)">
+                Пока нет операций
+            </div>`;
+
+        return;
+
+    }
+
+    home.innerHTML =
+        u.tx
+            .slice(0,5)
+            .map(transactionHTML)
+            .join("");
+
+    all.innerHTML =
+        u.tx
+            .map(transactionHTML)
+            .join("");
+
+}
+
+
+/* =========================================================
+   CHART
+========================================================= */
+
+function renderChart(){
+
+    const u = user();
+
+    const chart =
+        document.getElementById(
+            "chart"
+        );
+
+    if(!chart) return;
+
+    const max =
+        Math.max(
+            u.income,
+            u.expense,
+            1
+        );
+
+    const incomeHeight =
+        Math.max(
+            10,
+            u.income/max*150
+        );
+
+    const expenseHeight =
+        Math.max(
+            10,
+            u.expense/max*150
+        );
+
+    chart.innerHTML = `
+
+        <div style="
+            flex:1;
+            height:${incomeHeight}px;
+            border-radius:12px 12px 5px 5px;
+            background:var(--green);
+            opacity:.8;
+        "></div>
+
+        <div style="
+            flex:1;
+            height:${expenseHeight}px;
+            border-radius:12px 12px 5px 5px;
+            background:var(--red);
+            opacity:.8;
+        "></div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   THEMES
+========================================================= */
+
+function setTheme(theme){
+
+    const u = user();
+
+    u.theme = theme;
+
+    applyTheme();
+
+    save();
+
+}
+
+
+function applyTheme(){
+
+    const u = user();
+
+    if(!u){
+
+        return;
+
+    }
+
+    document.body.classList.remove(
+        "light",
+        "purple",
+        "red",
+        "green",
+        "blue"
+    );
+
+    if(u.theme !== "dark"){
+
+        document.body.classList.add(
+            u.theme
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+function closeModal(id){
+
+    document.getElementById(
+        id
+    ).classList.remove("show");
+
+}
+
+
+document
+    .querySelectorAll(".modal")
+    .forEach(modal => {
+
+        modal.addEventListener(
+            "click",
+            e => {
+
+                if(e.target === modal){
+
+                    modal.classList.remove(
+                        "show"
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   SECURITY / DISPLAY
+========================================================= */
+
+function escapeHTML(str){
+
+    return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+renderMines();
+
+if(session && user()){
+
+    openApp();
+
+}else{
+
+    document.getElementById(
+        "auth"
+    ).style.display="flex";
+
+    document.getElementById(
+        "main"
+    ).style.display="none";
+
+}
+
+</script>
+
+</body>
+</html>

@@ -5,102 +5,544 @@
 <meta name="viewport"
 content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 
-<title>SVTVN BANK</title>
+<meta name="theme-color" content="#1c1d21">
+
+<title>SVT BANK</title>
 
 <style>
+
+:root{
+    --bg:#1c1d21;
+    --bg2:#24262b;
+    --card:#292b30;
+    --card2:#303238;
+
+    --text:#f7f7f8;
+    --muted:#909197;
+
+    --accent:#7c5cff;
+    --accent2:#a98cff;
+
+    --green:#39df8c;
+    --red:#ff5267;
+    --yellow:#ffc857;
+
+    --border:rgba(255,255,255,.08);
+
+    --ease:cubic-bezier(.2,.8,.2,1);
+}
+
 *{
     box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
 }
 
-:root{
-    --bg:#080a0f;
-    --card:#11151d;
-    --card2:#191e28;
-    --text:#f7f8fb;
-    --muted:#8d96a5;
-    --accent:#087cff;
-    --accent2:#61b0ff;
-    --green:#21d789;
-    --red:#ff4d5a;
-    --yellow:#ffd45c;
-    --border:rgba(255,255,255,.08);
-    --shadow:0 20px 60px rgba(0,0,0,.38);
-}
-
-html,body{
+html,
+body{
+    width:100%;
+    height:100%;
     margin:0;
-    min-height:100%;
-    background:var(--bg);
+    overflow:hidden;
 }
 
 body{
-    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
-    "Segoe UI",sans-serif;
+    font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    "Segoe UI",
+    sans-serif;
+
+    background:var(--bg);
     color:var(--text);
-    overflow-x:hidden;
-    transition:.45s;
+
+    user-select:none;
 }
 
-button,input,select{
+button,
+input{
     font:inherit;
 }
 
 button{
     border:0;
-    cursor:pointer;
-    color:inherit;
+    outline:none;
 }
 
-.app{
+input{
+    outline:none;
+}
+
+#app{
     width:100%;
-    max-width:520px;
-    margin:auto;
-    min-height:100vh;
-    padding-bottom:105px;
+    height:100%;
+    position:relative;
+    overflow:hidden;
 }
 
-/* TOP */
+/* =====================================================
+   GLOBAL BACKGROUND
+===================================================== */
 
-.top{
-    height:76px;
-    padding:17px 18px 10px;
+.background{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+}
+
+.orb{
+    position:absolute;
+    width:300px;
+    height:300px;
+    border-radius:50%;
+    filter:blur(90px);
+    opacity:.08;
+    animation:orbFloat 12s ease-in-out infinite;
+}
+
+.orb.one{
+    background:var(--accent);
+    top:-150px;
+    left:-100px;
+}
+
+.orb.two{
+    background:#00aaff;
+    right:-150px;
+    bottom:-100px;
+    animation-delay:-5s;
+}
+
+@keyframes orbFloat{
+
+    0%,100%{
+        transform:translate3d(0,0,0);
+    }
+
+    50%{
+        transform:translate3d(30px,25px,0) scale(1.08);
+    }
+
+}
+
+
+/* =====================================================
+   PIN SCREEN
+===================================================== */
+
+.pin-screen{
+    position:absolute;
+    inset:0;
+    z-index:100;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    padding:
+        calc(env(safe-area-inset-top) + 12px)
+        20px
+        calc(env(safe-area-inset-bottom) + 20px);
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            rgba(255,255,255,.025),
+            transparent 35%
+        ),
+        var(--bg);
+
+    animation:screenIn .45s var(--ease);
+}
+
+@keyframes screenIn{
+
+    from{
+        opacity:0;
+        transform:scale(1.02);
+    }
+
+    to{
+        opacity:1;
+        transform:none;
+    }
+
+}
+
+
+/* fake iOS top island */
+
+.system-top{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    height:44px;
+}
+
+.system-pill{
+    background:#0875f5;
+    color:white;
+    font-weight:800;
+    font-size:18px;
+
+    padding:7px 20px;
+    height:36px;
+
+    border-radius:30px;
+
+    box-shadow:
+        0 8px 25px rgba(0,100,255,.18);
+
+    animation:pillIdle 4s ease-in-out infinite;
+}
+
+@keyframes pillIdle{
+
+    0%,100%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.03);
+    }
+
+}
+
+
+.pin-content{
+    width:100%;
+    max-width:500px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    margin-top:185px;
+}
+
+.pin-name{
+    font-size:43px;
+    font-weight:750;
+    letter-spacing:-1.5px;
+
+    margin-bottom:62px;
+
+    animation:nameFloat 5s ease-in-out infinite;
+}
+
+@keyframes nameFloat{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-2px);
+    }
+
+}
+
+
+.pin-dots{
+    display:flex;
+    gap:32px;
+
+    height:18px;
+    margin-bottom:30px;
+}
+
+.pin-dot{
+    width:17px;
+    height:17px;
+
+    border-radius:50%;
+
+    background:#8d8e91;
+
+    transition:
+        transform .16s var(--ease),
+        background .16s ease;
+}
+
+.pin-dot.filled{
+    background:#f4f4f5;
+    transform:scale(1.12);
+}
+
+.pin-dot.error{
+    background:var(--red);
+    animation:pinError .35s ease;
+}
+
+@keyframes pinError{
+
+    0%,100%{
+        transform:translateX(0);
+    }
+
+    25%{
+        transform:translateX(-9px);
+    }
+
+    50%{
+        transform:translateX(9px);
+    }
+
+    75%{
+        transform:translateX(-5px);
+    }
+
+}
+
+
+.pin-keypad{
+    width:100%;
+    max-width:470px;
+
+    margin-top:auto;
+
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+
+    row-gap:28px;
+    column-gap:30px;
+}
+
+.pin-key{
+    height:82px;
+
     display:flex;
     align-items:center;
-    justify-content:space-between;
-    position:sticky;
-    top:0;
-    z-index:50;
-    backdrop-filter:blur(25px);
-    background:rgba(8,10,15,.76);
+    justify-content:center;
+
+    background:transparent;
+    color:#f4f4f5;
+
+    font-size:47px;
+    font-weight:400;
+
+    border-radius:50%;
+
+    transition:
+        transform .12s ease,
+        background .12s ease;
 }
 
-.logo{
-    font-size:20px;
+.pin-key:active{
+    transform:scale(.82);
+
+    background:rgba(255,255,255,.07);
+}
+
+.pin-action{
+    font-size:17px;
+    color:#9b9ca0;
+    font-weight:650;
+}
+
+.pin-fingerprint{
+    font-size:30px;
+    color:#77787c;
+}
+
+.pin-bottom{
+    margin-top:26px;
+
+    color:#a1a2a6;
+
+    font-size:17px;
+    font-weight:650;
+
+    padding:10px 20px;
+}
+
+.pin-message{
+    height:25px;
+    margin-top:8px;
+
+    color:var(--red);
+
+    font-size:17px;
+
+    opacity:0;
+    transition:.2s;
+}
+
+.pin-message.visible{
+    opacity:1;
+}
+
+
+/* =====================================================
+   REGISTER / ACCOUNT SELECTION
+===================================================== */
+
+.register-screen{
+    position:absolute;
+    inset:0;
+    z-index:110;
+
+    display:none;
+
+    overflow:auto;
+
+    padding:
+        calc(env(safe-area-inset-top) + 30px)
+        18px
+        calc(env(safe-area-inset-bottom) + 30px);
+
+    background:var(--bg);
+}
+
+.register-box{
+    width:100%;
+    max-width:500px;
+    margin:auto;
+}
+
+.brand{
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:-2px;
+    margin-bottom:8px;
+}
+
+.brand span{
+    color:var(--accent2);
+}
+
+.subtitle{
+    color:var(--muted);
+    margin-bottom:25px;
+}
+
+.field{
+    width:100%;
+    height:56px;
+
+    border-radius:17px;
+
+    border:1px solid var(--border);
+
+    background:var(--card);
+
+    color:var(--text);
+
+    padding:0 17px;
+
+    margin-bottom:11px;
+
+    font-size:16px;
+
+    transition:.2s;
+}
+
+.field:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(124,92,255,.12);
+}
+
+.primary{
+    width:100%;
+    min-height:56px;
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accent2)
+        );
+
+    color:white;
+
     font-weight:850;
-    padding:9px 18px;
-    border-radius:22px;
-    background:var(--accent);
-    box-shadow:0 0 35px color-mix(in srgb,var(--accent) 35%,transparent);
-    animation:logoFloat 4s ease-in-out infinite;
+
+    box-shadow:
+        0 15px 35px rgba(124,92,255,.2);
+
+    transition:
+        transform .15s ease,
+        filter .15s ease;
 }
 
-@keyframes logoFloat{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-3px)}
+.primary:active{
+    transform:scale(.96);
+    filter:brightness(.9);
 }
 
-.topBalance{
-    font-weight:800;
-    font-size:15px;
+.secondary{
+    width:100%;
+    min-height:54px;
+
+    border-radius:17px;
+
+    background:var(--card);
+
+    color:var(--text);
+
+    border:1px solid var(--border);
+
+    font-weight:750;
 }
 
-/* PAGE */
+.pin-info{
+    padding:15px;
+    border-radius:17px;
+
+    background:rgba(124,92,255,.08);
+
+    color:var(--muted);
+
+    font-size:13px;
+
+    margin-bottom:13px;
+}
+
+
+/* =====================================================
+   BANK
+===================================================== */
+
+.bank{
+    display:none;
+
+    position:absolute;
+    inset:0;
+}
+
+.content{
+    position:absolute;
+    inset:0;
+
+    bottom:82px;
+
+    overflow-y:auto;
+
+    padding:
+        calc(env(safe-area-inset-top) + 15px)
+        16px
+        40px;
+
+    scrollbar-width:none;
+}
+
+.content::-webkit-scrollbar{
+    display:none;
+}
 
 .page{
     display:none;
-    padding:15px 18px;
-    animation:pageIn .35s ease;
+
+    width:100%;
+    max-width:720px;
+
+    margin:auto;
+
+    animation:pageIn .35s var(--ease);
 }
 
 .page.active{
@@ -108,252 +550,737 @@ button{
 }
 
 @keyframes pageIn{
+
     from{
         opacity:0;
-        transform:translateY(18px);
+        transform:translateY(12px);
     }
+
     to{
         opacity:1;
         transform:none;
     }
+
 }
 
-/* HOME */
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 
-.greeting{
-    margin-top:12px;
-    font-size:29px;
-    font-weight:850;
-    letter-spacing:-1px;
+    margin-bottom:20px;
 }
 
-.sub{
-    color:var(--muted);
-    margin-top:5px;
+.topbar h1{
+    margin:0;
+
+    font-size:30px;
+    letter-spacing:-1.3px;
 }
 
-.balanceCard{
-    margin-top:25px;
-    padding:25px;
-    min-height:210px;
-    border-radius:30px;
-    position:relative;
-    overflow:hidden;
+.user-avatar{
+    width:46px;
+    height:46px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
     background:
         linear-gradient(
             135deg,
-            color-mix(in srgb,var(--accent) 96%,black),
-            color-mix(in srgb,var(--accent) 35%,#111)
+            var(--accent),
+            var(--accent2)
+        );
+
+    font-weight:850;
+
+    box-shadow:
+        0 10px 30px rgba(124,92,255,.2);
+
+    animation:avatarIdle 5s ease-in-out infinite;
+}
+
+@keyframes avatarIdle{
+
+    0%,100%{
+        transform:translateY(0) rotate(0);
+    }
+
+    50%{
+        transform:translateY(-3px) rotate(2deg);
+    }
+
+}
+
+
+/* =====================================================
+   BALANCE
+===================================================== */
+
+.balance-card{
+    position:relative;
+    overflow:hidden;
+
+    border-radius:30px;
+
+    padding:25px;
+
+    margin-bottom:15px;
+
+    background:
+        radial-gradient(
+            circle at 90% 0%,
+            rgba(255,255,255,.2),
+            transparent 32%
+        ),
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #302075
         );
 
     box-shadow:
-        0 20px 65px color-mix(in srgb,var(--accent) 22%,transparent);
+        0 25px 60px rgba(0,0,0,.25);
 
-    animation:cardIdle 5s ease-in-out infinite;
+    animation:cardIdle 6s ease-in-out infinite;
 }
 
 @keyframes cardIdle{
-    0%,100%{transform:translateY(0) rotateX(0)}
-    50%{transform:translateY(-4px) rotateX(1deg)}
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-2px);
+    }
+
 }
 
-.balanceCard:before{
+.balance-card:after{
     content:"";
+
     position:absolute;
-    width:280px;
-    height:280px;
+
+    width:230px;
+    height:230px;
+
+    border:1px solid rgba(255,255,255,.12);
+
     border-radius:50%;
-    background:rgba(255,255,255,.1);
-    right:-110px;
-    top:-145px;
+
+    right:-100px;
+    bottom:-120px;
+
+    animation:ringIdle 7s linear infinite;
 }
 
-.balanceCard:after{
-    content:"";
-    position:absolute;
-    width:180px;
-    height:180px;
-    border-radius:50%;
-    background:rgba(255,255,255,.05);
-    left:-100px;
-    bottom:-110px;
+@keyframes ringIdle{
+
+    to{
+        transform:rotate(360deg);
+    }
+
 }
 
-.balanceLabel{
-    color:rgba(255,255,255,.72);
+.balance-label{
+    color:rgba(255,255,255,.7);
+    font-size:13px;
 }
 
 .balance{
     font-size:43px;
     font-weight:900;
-    margin-top:15px;
+
     letter-spacing:-2px;
+
+    margin:5px 0 24px;
 }
 
-.cardName{
-    position:absolute;
-    bottom:22px;
-    left:25px;
-    font-size:14px;
-    opacity:.88;
-}
-
-.cardNumber{
-    position:absolute;
-    bottom:22px;
-    right:25px;
-    font-size:13px;
-    opacity:.7;
-}
-
-/* ACTIONS */
-
-.actions{
+.balance-actions{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:1fr 1fr;
     gap:10px;
-    margin-top:18px;
 }
 
-.action{
-    padding:15px 5px;
-    border-radius:20px;
-    background:var(--card);
-    border:1px solid var(--border);
-    text-align:center;
-    transition:.2s;
+.balance-actions button{
+    height:49px;
+
+    border-radius:16px;
+
+    color:white;
+
+    background:rgba(255,255,255,.14);
+
+    backdrop-filter:blur(15px);
+
+    font-weight:800;
+
+    transition:.15s;
 }
 
-.action:active{
-    transform:scale(.91);
+.balance-actions button:active{
+    transform:scale(.94);
 }
 
-.actionIcon{
-    font-size:24px;
-    margin-bottom:6px;
+
+/* =====================================================
+   CARDS
+===================================================== */
+
+.virtual-card{
+    height:205px;
+
+    padding:24px;
+
+    border-radius:28px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1c1d22,
+            #383a42
+        );
+
+    border:1px solid rgba(255,255,255,.1);
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.25);
+
+    margin-bottom:16px;
+
+    transition:.3s;
 }
 
-.actionText{
-    font-size:11px;
-    color:var(--muted);
-}
-
-/* CARDS */
-
-.sectionTitle{
-    font-size:21px;
-    font-weight:850;
-    margin:27px 0 12px;
-}
-
-.card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:25px;
-    padding:18px;
-    box-shadow:var(--shadow);
-}
-
-/* TRANSACTIONS */
-
-.transaction{
-    display:flex;
-    align-items:center;
-    gap:13px;
-    padding:13px 0;
-    border-bottom:1px solid var(--border);
-}
-
-.transaction:last-child{
-    border-bottom:0;
-}
-
-.txIcon{
-    width:44px;
-    height:44px;
-    border-radius:15px;
-    display:grid;
-    place-items:center;
-    background:var(--card2);
-}
-
-.txInfo{
-    flex:1;
-}
-
-.txTitle{
-    font-weight:700;
-}
-
-.txDate{
-    color:var(--muted);
-    font-size:12px;
-    margin-top:3px;
-}
-
-.plus{
-    color:var(--green);
-}
-
-.minus{
-    color:var(--red);
-}
-
-/* NAV */
-
-.nav{
-    position:fixed;
-    bottom:0;
-    left:50%;
-    transform:translateX(-50%);
-    width:min(520px,100%);
-    padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    background:rgba(10,12,17,.88);
-    backdrop-filter:blur(28px);
-    border-top:1px solid var(--border);
-    z-index:100;
-}
-
-.navBtn{
-    background:none;
-    color:var(--muted);
-    padding:7px 0;
-    transition:.25s;
-}
-
-.navBtn.active{
-    color:var(--accent2);
+.virtual-card:hover{
     transform:translateY(-3px);
 }
 
-.navIcon{
-    font-size:21px;
+.card-shine{
+    position:absolute;
+
+    width:70px;
+    height:300px;
+
+    background:rgba(255,255,255,.08);
+
+    transform:rotate(25deg);
+
+    right:-100px;
+    top:-50px;
+
+    animation:shine 6s ease-in-out infinite;
 }
 
-.navText{
-    font-size:10px;
+@keyframes shine{
+
+    0%,55%{
+        right:-120px;
+    }
+
+    75%,100%{
+        right:500px;
+    }
+
+}
+
+.card-bank{
+    font-size:18px;
+    font-weight:900;
+}
+
+.card-chip{
+    width:45px;
+    height:34px;
+
+    border-radius:9px;
+
+    margin-top:34px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ddd,
+            #777
+        );
+}
+
+.card-number{
+    font-size:19px;
+
+    letter-spacing:2px;
+
+    margin-top:20px;
+}
+
+.card-owner{
+    font-size:11px;
+
+    opacity:.65;
+
+    text-transform:uppercase;
+
+    margin-top:7px;
+}
+
+
+/* =====================================================
+   SECTIONS
+===================================================== */
+
+.section{
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:24px;
+
+    padding:18px;
+
+    margin-bottom:15px;
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.12);
+}
+
+.section-title{
+    font-size:17px;
+    font-weight:850;
+    margin-bottom:14px;
+}
+
+.stat-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:11px;
+}
+
+.stat{
+    padding:17px;
+
+    border-radius:20px;
+
+    background:var(--card);
+    border:1px solid var(--border);
+}
+
+.stat-label{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.stat-value{
+    font-size:21px;
+    font-weight:900;
+    margin-top:6px;
+}
+
+.green{
+    color:var(--green);
+}
+
+.red{
+    color:var(--red);
+}
+
+
+/* =====================================================
+   TRANSACTIONS
+===================================================== */
+
+.tx{
+    display:flex;
+    align-items:center;
+
+    gap:12px;
+
+    padding:13px 0;
+
+    border-bottom:1px solid var(--border);
+}
+
+.tx:last-child{
+    border-bottom:0;
+}
+
+.tx-icon{
+    width:43px;
+    height:43px;
+
+    flex:none;
+
+    border-radius:15px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:var(--card2);
+}
+
+.tx-info{
+    flex:1;
+    min-width:0;
+}
+
+.tx-title{
+    font-weight:750;
+}
+
+.tx-date{
+    color:var(--muted);
+    font-size:11px;
     margin-top:3px;
 }
 
-/* PROFILE */
-
-.profileHead{
-    text-align:center;
-    padding:20px 0;
+.tx-amount{
+    font-weight:850;
+    white-space:nowrap;
 }
 
-.avatar{
-    width:90px;
-    height:90px;
-    margin:auto;
+
+/* =====================================================
+   BOTTOM NAV
+===================================================== */
+
+.nav{
+    position:absolute;
+
+    left:0;
+    right:0;
+    bottom:0;
+
+    height:82px;
+
+    padding:
+        7px
+        7px
+        calc(env(safe-area-inset-bottom) + 7px);
+
+    display:flex;
+    justify-content:space-around;
+
+    background:rgba(22,23,27,.88);
+
+    backdrop-filter:blur(25px);
+
+    border-top:1px solid var(--border);
+
+    z-index:50;
+}
+
+.nav-btn{
+    flex:1;
+    max-width:110px;
+
+    height:61px;
+
+    border-radius:18px;
+
+    color:#85868c;
+
+    background:transparent;
+
+    font-size:10px;
+    font-weight:750;
+
+    transition:.2s;
+}
+
+.nav-btn:active{
+    transform:scale(.88);
+}
+
+.nav-btn.active{
+    color:var(--accent2);
+    background:rgba(124,92,255,.11);
+}
+
+.nav-icon{
+    display:block;
+    font-size:22px;
+    margin-bottom:3px;
+}
+
+
+/* =====================================================
+   CLICKER
+===================================================== */
+
+.clicker-card{
+    text-align:center;
+    padding:24px;
+}
+
+.coin{
+    width:185px;
+    height:185px;
+
+    margin:35px auto 25px;
+
     border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:68px;
+    font-weight:900;
+
+    color:#754d00;
+
+    background:
+        radial-gradient(
+            circle at 32% 25%,
+            #fff0a5,
+            #e9b63e 52%,
+            #a66b08
+        );
+
+    border:8px solid #efc45d;
+
+    box-shadow:
+        0 0 0 8px rgba(255,200,80,.06),
+        0 25px 65px rgba(255,170,30,.18);
+
+    transition:.1s;
+
+    animation:coinIdle 4s ease-in-out infinite;
+}
+
+@keyframes coinIdle{
+
+    0%,100%{
+        transform:translateY(0) rotate(-2deg);
+    }
+
+    50%{
+        transform:translateY(-5px) rotate(2deg);
+    }
+
+}
+
+.coin.hit{
+    animation:coinHit .28s ease;
+}
+
+@keyframes coinHit{
+
+    0%{
+        transform:scale(1);
+    }
+
+    45%{
+        transform:scale(.82) rotate(-8deg);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+
+}
+
+.coin-float{
+    position:fixed;
+
+    pointer-events:none;
+
+    color:#ffd45d;
+
+    font-size:23px;
+    font-weight:900;
+
+    animation:floatMoney .8s ease forwards;
+}
+
+@keyframes floatMoney{
+
+    from{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+
+    to{
+        opacity:0;
+        transform:translateY(-90px) scale(1.2);
+    }
+
+}
+
+
+/* =====================================================
+   MINES
+===================================================== */
+
+.game-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.game-balance{
+    color:var(--green);
+    font-weight:900;
+}
+
+.mines-settings{
     display:grid;
-    place-items:center;
-    font-size:34px;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.field-label{
+    display:block;
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:6px;
+}
+
+.mine-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:8px;
+
+    margin:16px 0;
+}
+
+.mine-cell{
+    aspect-ratio:1;
+
+    border-radius:15px;
+
+    background:var(--card2);
+
+    border:1px solid var(--border);
+
+    color:white;
+
+    font-size:23px;
+
+    transition:
+        transform .12s,
+        background .2s;
+}
+
+.mine-cell:active{
+    transform:scale(.88);
+}
+
+.mine-cell.safe{
+    background:rgba(57,223,140,.12);
+    border-color:rgba(57,223,140,.3);
+
+    animation:safe .3s ease;
+}
+
+.mine-cell.bomb{
+    background:rgba(255,82,103,.14);
+    border-color:rgba(255,82,103,.3);
+
+    animation:bomb .4s ease;
+}
+
+@keyframes safe{
+
+    from{
+        transform:scale(.7);
+        opacity:.3;
+    }
+
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+
+}
+
+@keyframes bomb{
+
+    0%,100%{
+        transform:translateX(0);
+    }
+
+    25%{
+        transform:translateX(-7px);
+    }
+
+    50%{
+        transform:translateX(7px);
+    }
+
+    75%{
+        transform:translateX(-4px);
+    }
+
+}
+
+.potential{
+    text-align:center;
+
+    font-size:18px;
+
     font-weight:850;
+
+    margin:12px 0;
+}
+
+.cashout{
+    width:100%;
+
+    height:55px;
+
+    border-radius:17px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--green),
+            #18a967
+        );
+
+    color:#06150d;
+
+    font-weight:900;
+
+    transition:.2s;
+}
+
+.cashout:disabled{
+    opacity:.28;
+    filter:grayscale(1);
+}
+
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+.profile-head{
+    text-align:center;
+    padding:15px 0 22px;
+}
+
+.big-avatar{
+    width:88px;
+    height:88px;
+
+    margin:auto;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    font-size:29px;
+    font-weight:900;
 
     background:
         linear-gradient(
@@ -363,902 +1290,3015 @@ button{
         );
 
     box-shadow:
-        0 0 45px color-mix(in srgb,var(--accent) 32%,transparent);
-
-    animation:avatarIdle 4s ease-in-out infinite;
+        0 18px 45px rgba(124,92,255,.25);
 }
 
-@keyframes avatarIdle{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-5px)}
-}
-
-.profileName{
+.profile-name{
     font-size:25px;
-    font-weight:850;
-    margin-top:13px;
+    font-weight:900;
+
+    margin-top:12px;
 }
 
-.username{
+.profile-login{
     color:var(--muted);
+    margin-top:4px;
 }
 
-.menuItem{
-    width:100%;
-    background:var(--card);
-    padding:17px;
-    border-radius:19px;
-    margin-top:9px;
-    display:flex;
-    align-items:center;
-    gap:13px;
-    text-align:left;
+.theme-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:9px;
+}
+
+.theme-btn{
+    min-height:48px;
+
+    border-radius:14px;
+
+    background:var(--card2);
+
+    color:var(--text);
+
     border:1px solid var(--border);
-    transition:.2s;
+
+    font-size:12px;
+    font-weight:750;
+
+    transition:.15s;
 }
 
-.menuItem:active{
-    transform:scale(.97);
+.theme-btn:active{
+    transform:scale(.94);
 }
 
-.menuItem span:last-child{
-    margin-left:auto;
-    color:var(--muted);
-}
 
-.danger{
-    color:#ff5663;
-}
-
-/* MODAL */
+/* =====================================================
+   MODAL
+===================================================== */
 
 .modal{
     position:fixed;
+
     inset:0;
-    background:rgba(0,0,0,.72);
-    backdrop-filter:blur(16px);
-    display:none;
-    align-items:flex-end;
-    justify-content:center;
+
     z-index:200;
+
+    display:none;
+
+    align-items:flex-end;
+
+    background:rgba(0,0,0,.55);
+
+    backdrop-filter:blur(9px);
 }
 
 .modal.show{
     display:flex;
 }
 
-.sheet{
-    width:min(520px,100%);
-    background:var(--card);
-    border-radius:30px 30px 0 0;
-    padding:25px;
-    padding-bottom:calc(25px + env(safe-area-inset-bottom));
-    animation:sheetIn .3s ease;
-    max-height:90vh;
-    overflow:auto;
-}
-
-@keyframes sheetIn{
-    from{transform:translateY(100%)}
-    to{transform:none}
-}
-
-.input{
+.modal-box{
     width:100%;
-    padding:16px;
-    margin-top:10px;
-    background:var(--card2);
-    border:1px solid var(--border);
-    border-radius:17px;
-    color:var(--text);
-    outline:none;
-}
+    max-width:620px;
 
-.btn{
-    width:100%;
-    padding:17px;
-    margin-top:12px;
-    border-radius:18px;
-    background:var(--accent);
-    font-weight:850;
-    transition:.2s;
-}
+    margin:auto;
 
-.btn:active{
-    transform:scale(.96);
-}
-
-.btn:disabled{
-    opacity:.45;
-}
-
-.btn.secondary{
-    background:var(--card2);
-}
-
-.btn.dangerBtn{
-    background:var(--red);
-}
-
-/* AUTH */
-
-.auth{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:25px;
-}
-
-.authBox{
-    width:100%;
-    max-width:420px;
-    animation:pageIn .6s ease;
-}
-
-.authLogo{
-    text-align:center;
-    font-size:30px;
-    font-weight:900;
-    margin-bottom:30px;
-}
-
-.authBox h1{
-    font-size:32px;
-}
-
-.authBox p{
-    color:var(--muted);
-}
-
-.authSwitch{
-    text-align:center;
-    color:var(--accent2);
-    margin-top:20px;
-}
-
-/* PIN */
-
-.pinScreen{
-    min-height:100vh;
-    background:#1b1f24;
-    color:#f5f5f7;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding-top:20vh;
-}
-
-.pinLogo{
-    background:#087cff;
-    padding:7px 20px;
-    border-radius:24px;
-    font-size:25px;
-    font-weight:800;
-}
-
-.pinName{
-    margin-top:90px;
-    font-size:34px;
-    font-weight:850;
-}
-
-.dots{
-    display:flex;
-    gap:28px;
-    margin-top:55px;
-}
-
-.dot{
-    width:13px;
-    height:13px;
-    border-radius:50%;
-    background:#85878a;
-    transition:.15s;
-}
-
-.dot.filled{
-    background:white;
-    transform:scale(1.15);
-}
-
-.pinKeys{
-    width:100%;
-    max-width:450px;
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    margin-top:130px;
-    row-gap:35px;
-}
-
-.pinKey{
-    background:none;
-    font-size:57px;
-    color:#f5f5f7;
-    transition:.12s;
-}
-
-.pinKey:active{
-    transform:scale(.8);
-    opacity:.5;
-}
-
-.pinBottom{
-    position:absolute;
-    bottom:55px;
-    color:#aaa;
-    font-size:17px;
-}
-
-.shake{
-    animation:shake .35s;
-}
-
-@keyframes shake{
-    20%{transform:translateX(-12px)}
-    40%{transform:translateX(12px)}
-    60%{transform:translateX(-8px)}
-    80%{transform:translateX(8px)}
-}
-
-/* CASINO */
-
-.casinoHero{
     padding:22px;
-    border-radius:27px;
-    background:
-        radial-gradient(
-            circle at 80% 20%,
-            rgba(0,122,255,.2),
-            transparent 35%
-        ),
-        linear-gradient(135deg,#171b22,#101116);
 
-    overflow:hidden;
-    position:relative;
-}
+    border-radius:30px 30px 0 0;
 
-.casinoHero h1{
-    font-size:30px;
-    margin:0;
-}
+    background:var(--bg2);
 
-.casinoHero p{
-    color:var(--muted);
-}
-
-.games{
-    display:grid;
-    gap:12px;
-    margin-top:17px;
-}
-
-.gameCard{
-    min-height:120px;
-    padding:20px;
-    border-radius:24px;
-    background:var(--card);
     border:1px solid var(--border);
-    position:relative;
-    overflow:hidden;
-    transition:.25s;
+
+    animation:modalIn .3s var(--ease);
 }
 
-.gameCard:active{
-    transform:scale(.97);
-}
+@keyframes modalIn{
 
-.gameEmoji{
-    font-size:35px;
-}
-
-.gameName{
-    font-size:20px;
-    font-weight:850;
-    margin-top:8px;
-}
-
-.gameDesc{
-    color:var(--muted);
-    font-size:12px;
-}
-
-.gameGlow{
-    position:absolute;
-    width:130px;
-    height:130px;
-    right:-40px;
-    top:-30px;
-    border-radius:50%;
-    background:var(--accent);
-    filter:blur(45px);
-    opacity:.3;
-}
-
-/* GAME */
-
-.gameHeader{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:18px;
-}
-
-.back{
-    background:var(--card);
-    width:42px;
-    height:42px;
-    border-radius:15px;
-}
-
-.gameTitle{
-    font-size:25px;
-    font-weight:850;
-}
-
-.betBox{
-    background:var(--card);
-    padding:17px;
-    border-radius:23px;
-    border:1px solid var(--border);
-}
-
-.betLabel{
-    color:var(--muted);
-    font-size:13px;
-}
-
-.betInput{
-    width:100%;
-    border:0;
-    background:none;
-    color:var(--text);
-    outline:none;
-    font-size:30px;
-    font-weight:850;
-    margin-top:5px;
-}
-
-.betPresets{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:7px;
-    margin-top:10px;
-}
-
-.preset{
-    padding:9px;
-    border-radius:12px;
-    background:var(--card2);
-}
-
-/* MINES */
-
-.minesGrid{
-    margin-top:18px;
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:8px;
-}
-
-.mineCell{
-    aspect-ratio:1;
-    border-radius:15px;
-    background:linear-gradient(145deg,#202631,#11151c);
-    border:1px solid rgba(255,255,255,.06);
-    display:grid;
-    place-items:center;
-    font-size:25px;
-    transition:.18s;
-    box-shadow:inset 0 2px 5px rgba(255,255,255,.03);
-}
-
-.mineCell:active{
-    transform:scale(.9);
-}
-
-.mineCell.open{
-    background:linear-gradient(145deg,#28303c,#171b23);
-    animation:mineOpen .25s ease;
-}
-
-@keyframes mineOpen{
     from{
-        transform:scale(.7);
-        opacity:0;
+        transform:translateY(100%);
     }
+
     to{
         transform:none;
-        opacity:1;
     }
+
 }
 
-.mineCell.win{
-    background:rgba(33,215,137,.15);
-    border-color:var(--green);
-}
-
-.mineCell.boom{
-    background:rgba(255,77,90,.2);
-    border-color:var(--red);
-    animation:boom .45s;
-}
-
-@keyframes boom{
-    30%{transform:scale(1.15)}
-    60%{transform:scale(.85)}
-}
-
-/* UPGRADER */
-
-.wheelWrap{
-    width:280px;
-    height:280px;
-    margin:35px auto;
-    position:relative;
-}
-
-.wheel{
-    width:100%;
-    height:100%;
-    border-radius:50%;
-
-    background:
-        conic-gradient(
-            #21d789 0deg 180deg,
-            #ff4d5a 180deg 360deg
-        );
-
-    box-shadow:
-        0 0 45px rgba(33,215,137,.18),
-        inset 0 0 25px rgba(0,0,0,.3);
-
-    transition:
-        transform 3.5s cubic-bezier(.12,.75,.2,1);
-}
-
-.wheel:before{
-    content:"";
-    position:absolute;
-    inset:10px;
-    border-radius:50%;
-    border:3px solid rgba(255,255,255,.15);
-}
-
-.wheel:after{
-    content:"50%";
-    position:absolute;
-    width:100px;
-    height:100px;
-    border-radius:50%;
-    background:#151820;
-    top:90px;
-    left:90px;
-    display:grid;
-    place-items:center;
-    font-size:23px;
+.modal-title{
+    font-size:21px;
     font-weight:900;
-    box-shadow:0 0 25px rgba(0,0,0,.45);
+    margin-bottom:17px;
 }
 
-.pointer{
-    position:absolute;
-    top:-20px;
-    left:50%;
-    transform:translateX(-50%);
-    width:0;
-    height:0;
 
-    border-left:13px solid transparent;
-    border-right:13px solid transparent;
-    border-top:30px solid white;
-
-    z-index:5;
-    filter:drop-shadow(0 3px 5px black);
-}
-
-/* CRASH */
-
-.crashArena{
-    margin-top:18px;
-    height:310px;
-    border-radius:25px;
-    overflow:hidden;
-    position:relative;
-
-    background:
-        radial-gradient(
-            circle at 70% 25%,
-            rgba(0,140,255,.2),
-            transparent 30%
-        ),
-        linear-gradient(#080b12,#111723);
-
-    border:1px solid var(--border);
-}
-
-.stars{
-    position:absolute;
-    inset:0;
-
-    background-image:
-        radial-gradient(circle,white 1px,transparent 1px);
-
-    background-size:55px 55px;
-    opacity:.15;
-
-    animation:starsMove 7s linear infinite;
-}
-
-@keyframes starsMove{
-    from{background-position:0 0}
-    to{background-position:55px 55px}
-}
-
-.rocket{
-    position:absolute;
-    font-size:55px;
-    left:15%;
-    bottom:15%;
-    transform:rotate(-35deg);
-
-    filter:
-        drop-shadow(0 0 20px #299dff);
-
-    transition:
-        left .12s linear,
-        bottom .12s linear;
-}
-
-.crashX{
-    position:absolute;
-    top:40%;
-    width:100%;
-    text-align:center;
-    font-size:52px;
-    font-weight:900;
-}
-
-.crashStatus{
-    text-align:center;
-    margin-top:12px;
-    color:var(--muted);
-}
-
-/* CLICKER */
-
-.clicker{
-    height:330px;
-    display:grid;
-    place-items:center;
-    position:relative;
-}
-
-.coin{
-    width:190px;
-    height:190px;
-    border-radius:50%;
-
-    display:grid;
-    place-items:center;
-
-    font-size:65px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #ffd85b,
-            #e99c00
-        );
-
-    box-shadow:
-        0 0 50px rgba(255,193,7,.25),
-        inset 0 5px 10px rgba(255,255,255,.3);
-
-    animation:coinIdle 2.5s ease-in-out infinite;
-
-    user-select:none;
-
-    transition:.12s;
-}
-
-.coin:active{
-    transform:scale(.86) rotate(-5deg);
-}
-
-@keyframes coinIdle{
-    0%,100%{
-        transform:translateY(0) rotate(-2deg);
-    }
-
-    50%{
-        transform:translateY(-9px) rotate(2deg);
-    }
-}
-
-.floatMoney{
-    position:fixed;
-    font-size:25px;
-    color:#ffd34d;
-    font-weight:900;
-    pointer-events:none;
-    animation:moneyFloat 1s forwards;
-    z-index:999;
-}
-
-@keyframes moneyFloat{
-    from{
-        opacity:1;
-        transform:translateY(0) scale(.8);
-    }
-
-    to{
-        opacity:0;
-        transform:translateY(-100px) scale(1.2);
-    }
-}
-
-/* TOAST */
+/* =====================================================
+   TOAST
+===================================================== */
 
 .toast{
     position:fixed;
-    left:50%;
-    top:80px;
-
-    transform:
-        translateX(-50%)
-        translateY(-20px);
-
-    background:#242933;
-    padding:13px 18px;
-    border-radius:18px;
-
-    opacity:0;
-    pointer-events:none;
 
     z-index:500;
 
-    transition:.3s;
+    left:50%;
+    bottom:100px;
 
-    box-shadow:
-        0 10px 35px rgba(0,0,0,.35);
+    transform:
+        translate(-50%,20px)
+        scale(.96);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    padding:13px 18px;
+
+    border-radius:16px;
+
+    background:#303137;
+
+    border:1px solid var(--border);
+
+    box-shadow:0 20px 50px rgba(0,0,0,.3);
+
+    font-size:14px;
+    font-weight:750;
+
+    transition:.25s;
+
+    white-space:nowrap;
 }
 
 .toast.show{
     opacity:1;
+
     transform:
-        translateX(-50%)
-        translateY(0);
+        translate(-50%,0)
+        scale(1);
 }
 
-/* THEMES */
 
-body.theme-midnight{
-    --bg:#07090e;
-    --card:#10141c;
-    --card2:#171c25;
-    --accent:#087cff;
-    --accent2:#61b0ff;
-}
+/* =====================================================
+   THEMES
+===================================================== */
 
-body.theme-graphite{
-    --bg:#0b0b0d;
-    --card:#151518;
-    --card2:#202024;
-    --accent:#b9bcc4;
-    --accent2:#f1f1f4;
-}
-
-body.theme-slate{
-    --bg:#0b1118;
-    --card:#121b25;
-    --card2:#1b2734;
-    --accent:#5e9dff;
-    --accent2:#9ac4ff;
-}
-
-body.theme-ocean{
-    --bg:#061116;
-    --card:#0c1b22;
-    --card2:#122933;
-    --accent:#00a9d8;
-    --accent2:#54d9ff;
-}
-
-body.theme-forest{
-    --bg:#07100b;
-    --card:#0e1a12;
-    --card2:#16251a;
-    --accent:#24b86d;
-    --accent2:#6be6a4;
-}
-
-body.theme-light{
-    --bg:#f2f4f8;
+body.light{
+    --bg:#f4f5f7;
+    --bg2:#ffffff;
     --card:#ffffff;
-    --card2:#edf0f5;
-    --text:#111318;
-    --muted:#737a88;
-    --accent:#087cff;
-    --accent2:#55aaff;
-    --border:rgba(0,0,0,.07);
+    --card2:#eceef2;
+    --text:#16171b;
+    --muted:#777981;
+    --border:rgba(0,0,0,.08);
 }
 
-/* RESPONSIVE */
+body.purple{
+    --accent:#9a5cff;
+    --accent2:#d18cff;
+}
 
-@media(max-width:380px){
+body.red{
+    --accent:#ff3d62;
+    --accent2:#ff837d;
+}
 
-    .balance{
-        font-size:36px;
+body.green{
+    --accent:#13c982;
+    --accent2:#6cf0b5;
+}
+
+body.blue{
+    --accent:#248bff;
+    --accent2:#67c9ff;
+}
+
+body.red .orb.one{
+    background:#ff3055;
+}
+
+body.green .orb.one{
+    background:#00d68a;
+}
+
+body.blue .orb.one{
+    background:#1688ff;
+}
+
+
+/* =====================================================
+   SMALL PHONES
+===================================================== */
+
+@media(max-height:700px){
+
+    .pin-content{
+        margin-top:100px;
+    }
+
+    .pin-name{
+        margin-bottom:40px;
+    }
+
+    .pin-keypad{
+        row-gap:8px;
+    }
+
+    .pin-key{
+        height:65px;
     }
 
     .coin{
-        width:160px;
-        height:160px;
+        width:155px;
+        height:155px;
     }
 
-    .wheelWrap{
-        width:240px;
-        height:240px;
-    }
-
-    .wheel:after{
-        width:85px;
-        height:85px;
-        top:77px;
-        left:77px;
-    }
 }
+
+@media(max-width:370px){
+
+    .pin-name{
+        font-size:36px;
+    }
+
+    .pin-keypad{
+        column-gap:15px;
+    }
+
+    .pin-key{
+        font-size:42px;
+    }
+
+}
+
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *:before,
+    *:after{
+        animation-duration:.001ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.001ms!important;
+    }
+
+}
+
 </style>
 </head>
 
 <body>
 
-<div id="root"></div>
-<div id="toast" class="toast"></div>
+<div id="app">
+
+<div class="background">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+</div>
+
+
+<!-- =====================================================
+     PIN SCREEN
+===================================================== -->
+
+<div class="pin-screen" id="pinScreen">
+
+    <div class="system-top">
+        <div class="system-pill">
+            SVT BANK
+        </div>
+    </div>
+
+    <div class="pin-content">
+
+        <div class="pin-name"
+             id="pinName">
+            Добро пожаловать
+        </div>
+
+        <div class="pin-dots"
+             id="pinDots">
+
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+
+        </div>
+
+        <div class="pin-message"
+             id="pinMessage">
+            Неверный код-пароль
+        </div>
+
+    </div>
+
+
+    <div class="pin-keypad">
+
+        <button class="pin-key"
+                onclick="pinInput('1')">
+            1
+        </button>
+
+        <button class="pin-key"
+                onclick="pinInput('2')">
+            2
+        </button>
+
+        <button class="pin-key"
+                onclick="pinInput('3')">
+            3
+        </button>
+
+        <button class="pin-key"
+                onclick="pinInput('4')">
+            4
+        </button>
+
+        <button class="pin-key"
+                onclick="pinInput('5')">
+            5
+        </button>
+
+        <button class="pin-key"
+                onclick="pinInput('6')">
+            6
+        </button>
+
+        <button class="pin-key"
+                onclick="pinInput('7')">
+            7
+        </button>
+
+        <button class="pin-key"
+                onclick="pinInput('8')">
+            8
+        </button>
+
+        <button class="pin-key"
+                onclick="pinInput('9')">
+            9
+        </button>
+
+        <button class="pin-key pin-action"
+                onclick="logoutPin()">
+            Выйти
+        </button>
+
+        <button class="pin-key"
+                onclick="pinInput('0')">
+            0
+        </button>
+
+        <button class="pin-key pin-fingerprint"
+                onclick="fakeBiometric()">
+            ◎
+        </button>
+
+    </div>
+
+    <button class="pin-bottom"
+            onclick="forgotPin()">
+        Не помню код-пароль
+    </button>
+
+</div>
+
+
+<!-- =====================================================
+     REGISTRATION
+===================================================== -->
+
+<div class="register-screen"
+     id="registerScreen">
+
+    <div class="register-box">
+
+        <div class="brand">
+            SVT<span>BANK</span>
+        </div>
+
+        <div class="subtitle">
+            Создайте новый банковский аккаунт
+        </div>
+
+        <input class="field"
+               id="firstName"
+               placeholder="Имя">
+
+        <input class="field"
+               id="lastName"
+               placeholder="Фамилия">
+
+        <input class="field"
+               id="username"
+               placeholder="Юзернейм, например @svtvn">
+
+        <input class="field"
+               id="regLogin"
+               placeholder="Логин">
+
+        <input class="field"
+               id="regPassword"
+               type="password"
+               placeholder="Пароль">
+
+        <div class="pin-info">
+            🔐 Код-пароль нужен для быстрого входа
+            в приложение. Используйте 4–6 цифр.
+        </div>
+
+        <input class="field"
+               id="regPin"
+               inputmode="numeric"
+               maxlength="6"
+               placeholder="Код-пароль">
+
+        <button class="primary"
+                onclick="register()">
+            СОЗДАТЬ АККАУНТ
+        </button>
+
+        <button class="secondary"
+                style="margin-top:10px"
+                onclick="showLoginFromRegister()">
+            У МЕНЯ УЖЕ ЕСТЬ АККАУНТ
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     BANK
+===================================================== -->
+
+<div class="bank" id="bank">
+
+<div class="content">
+
+
+<!-- HOME -->
+
+<section class="page active"
+         id="page-home">
+
+    <div class="topbar">
+
+        <div>
+            <div style="
+                color:var(--muted);
+                font-size:13px;
+            ">
+                Добрый день
+            </div>
+
+            <h1 id="helloName">
+                Пользователь
+            </h1>
+        </div>
+
+        <div class="user-avatar"
+             id="topAvatar">
+            ?
+        </div>
+
+    </div>
+
+
+    <div class="balance-card">
+
+        <div class="balance-label">
+            Доступный баланс
+        </div>
+
+        <div class="balance"
+             id="mainBalance">
+            0 ₽
+        </div>
+
+        <div class="balance-actions">
+
+            <button onclick="openTopup()">
+                ＋ Пополнить
+            </button>
+
+            <button onclick="openTransfer()">
+                ↗ Перевести
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div id="homeCard"></div>
+
+
+    <div class="stat-grid">
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Доходы
+            </div>
+
+            <div class="stat-value green"
+                 id="homeIncome">
+                0 ₽
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Расходы
+            </div>
+
+            <div class="stat-value red"
+                 id="homeExpense">
+                0 ₽
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="section"
+         style="margin-top:15px">
+
+        <div class="section-title">
+            Последние операции
+        </div>
+
+        <div id="homeTransactions"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ANALYTICS -->
+
+<section class="page"
+         id="page-analytics">
+
+    <div class="topbar">
+        <h1>Аналитика</h1>
+    </div>
+
+    <div class="stat-grid">
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Доходы
+            </div>
+
+            <div class="stat-value green"
+                 id="analyticsIncome">
+                0 ₽
+            </div>
+
+        </div>
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Расходы
+            </div>
+
+            <div class="stat-value red"
+                 id="analyticsExpense">
+                0 ₽
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="section"
+         style="margin-top:15px">
+
+        <div class="section-title">
+            Доходы / расходы
+        </div>
+
+        <div id="chart"
+             style="
+                height:190px;
+                display:flex;
+                align-items:end;
+                gap:10px;
+                padding-top:20px;
+             ">
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">
+            История операций
+        </div>
+
+        <div id="allTransactions"></div>
+
+    </div>
+
+</section>
+
+
+<!-- CLICKER -->
+
+<section class="page"
+         id="page-clicker">
+
+    <div class="topbar">
+
+        <h1>Заработок</h1>
+
+        <div class="game-balance"
+             id="clickerBalance">
+            0 ₽
+        </div>
+
+    </div>
+
+
+    <div class="section clicker-card">
+
+        <div class="section-title">
+            Кликер
+        </div>
+
+        <div style="color:var(--muted)">
+            Нажимайте на монету
+        </div>
+
+
+        <div class="coin"
+             id="coin"
+             onclick="clickCoin(event)">
+            ₽
+        </div>
+
+
+        <div style="
+            font-size:34px;
+            font-weight:900;
+        "
+        id="clickCount">
+            0 ₽
+        </div>
+
+        <div style="
+            color:var(--muted);
+            margin-top:5px;
+        ">
+            заработано
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- MINES -->
+
+<section class="page"
+         id="page-casino">
+
+    <div class="topbar">
+
+        <h1>Mines</h1>
+
+        <div class="game-balance"
+             id="casinoBalance">
+            0 ₽
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="game-head">
+
+            <div>
+                <b>MINES</b>
+
+                <div style="
+                    color:var(--muted);
+                    font-size:12px;
+                    margin-top:3px;
+                ">
+                    Откройте безопасные клетки
+                </div>
+            </div>
+
+            <div>
+                💣
+            </div>
+
+        </div>
+
+
+        <div class="mines-settings"
+             style="margin-top:15px">
+
+            <div>
+
+                <label class="field-label">
+                    Ставка
+                </label>
+
+                <input class="field"
+                       id="bet"
+                       type="number"
+                       min="1"
+                       value="100"
+                       style="margin:0">
+
+            </div>
+
+
+            <div>
+
+                <label class="field-label">
+                    Мин
+                </label>
+
+                <input class="field"
+                       id="mineCount"
+                       type="number"
+                       min="1"
+                       max="24"
+                       value="3"
+                       style="margin:0">
+
+            </div>
+
+        </div>
+
+
+        <button class="primary"
+                style="margin-top:11px"
+                onclick="startMines()">
+            НАЧАТЬ ИГРУ
+        </button>
+
+
+        <div class="mine-grid"
+             id="mineGrid">
+        </div>
+
+
+        <div class="potential"
+             id="potential">
+            Потенциальный выигрыш: 0 ₽
+        </div>
+
+
+        <button class="cashout"
+                id="cashout"
+                disabled
+                onclick="cashout()">
+            ЗАБРАТЬ ВЫИГРЫШ
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section class="page"
+         id="page-profile">
+
+    <div class="topbar">
+        <h1>Профиль</h1>
+    </div>
+
+
+    <div class="profile-head">
+
+        <div class="big-avatar"
+             id="bigAvatar">
+            ?
+        </div>
+
+        <div class="profile-name"
+             id="profileName">
+            Пользователь
+        </div>
+
+        <div class="profile-login"
+             id="profileLogin">
+            @user
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">
+            Виртуальная карта
+        </div>
+
+        <div id="profileCard"></div>
+
+        <button class="primary"
+                id="cardButton"
+                onclick="createCard()">
+            ВЫПУСТИТЬ ВИРТУАЛЬНУЮ КАРТУ
+        </button>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-title">
+            Тема приложения
+        </div>
+
+        <div class="theme-grid">
+
+            <button class="theme-btn"
+                    onclick="setTheme('dark')">
+                🌑 Тёмная
+            </button>
+
+            <button class="theme-btn"
+                    onclick="setTheme('light')">
+                ☀️ Светлая
+            </button>
+
+            <button class="theme-btn"
+                    onclick="setTheme('purple')">
+                🟣 Фиолетовая
+            </button>
+
+            <button class="theme-btn"
+                    onclick="setTheme('red')">
+                🔴 Красная
+            </button>
+
+            <button class="theme-btn"
+                    onclick="setTheme('green')">
+                🟢 Зелёная
+            </button>
+
+            <button class="theme-btn"
+                    onclick="setTheme('blue')">
+                🔵 Синяя
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <button class="secondary"
+                onclick="logout()">
+            ВЫЙТИ ИЗ АККАУНТА
+        </button>
+
+    </div>
+
+</section>
+
+
+</div>
+
+
+<!-- NAV -->
+
+<nav class="nav">
+
+    <button class="nav-btn active"
+            onclick="openPage('home',this)">
+        <span class="nav-icon">⌂</span>
+        Главная
+    </button>
+
+    <button class="nav-btn"
+            onclick="openPage('analytics',this)">
+        <span class="nav-icon">◒</span>
+        Аналитика
+    </button>
+
+    <button class="nav-btn"
+            onclick="openPage('clicker',this)">
+        <span class="nav-icon">₽</span>
+        Заработок
+    </button>
+
+    <button class="nav-btn"
+            onclick="openPage('casino',this)">
+        <span class="nav-icon">💣</span>
+        Mines
+    </button>
+
+    <button class="nav-btn"
+            onclick="openPage('profile',this)">
+        <span class="nav-icon">●</span>
+        Профиль
+    </button>
+
+</nav>
+
+</div>
+
+
+<!-- =====================================================
+     TOPUP
+===================================================== -->
+
+<div class="modal"
+     id="topupModal">
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            Пополнение карты
+        </div>
+
+        <div id="topupContent"></div>
+
+        <input class="field"
+               id="topupAmount"
+               type="number"
+               placeholder="Сумма">
+
+        <button class="primary"
+                onclick="topup()">
+            ПОПОЛНИТЬ
+        </button>
+
+        <button class="secondary"
+                style="margin-top:9px"
+                onclick="closeModal('topupModal')">
+            ОТМЕНА
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TRANSFER
+===================================================== -->
+
+<div class="modal"
+     id="transferModal">
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            Перевод
+        </div>
+
+        <input class="field"
+               id="transferUsername"
+               placeholder="Юзернейм получателя">
+
+        <input class="field"
+               id="transferAmount"
+               type="number"
+               placeholder="Сумма">
+
+        <button class="primary"
+                onclick="transfer()">
+            ПЕРЕВЕСТИ
+        </button>
+
+        <button class="secondary"
+                style="margin-top:9px"
+                onclick="closeModal('transferModal')">
+            ОТМЕНА
+        </button>
+
+    </div>
+
+</div>
+
+
+<div class="toast"
+     id="toast">
+</div>
+
 
 <script>
 
-const KEY="svtvn_bank_account_v5";
+/* =========================================================
+   DATABASE
+========================================================= */
 
-let account=JSON.parse(
-    localStorage.getItem(KEY)||"null"
+const USERS_KEY="SVT_BANK_USERS_V5";
+
+let users=
+JSON.parse(
+    localStorage.getItem(USERS_KEY)||"[]"
 );
 
-let state={
-    page:"home",
-    casinoMode:null,
+let currentUserId=
+localStorage.getItem(
+    "SVT_BANK_LAST_USER"
+);
 
-    mines:null,
+let currentPin="";
 
-    upgraderSpinning:false,
-    upgraderRotation:0,
+let audioContext=null;
 
-    crash:null
-};
 
-/* ================= SOUND ================= */
+/* =========================================================
+   AUDIO ENGINE
+========================================================= */
 
-let audioCtx=null;
+function audio(){
 
-function sound(type="click"){
+    if(!audioContext){
+
+        const AudioCtx=
+            window.AudioContext||
+            window.webkitAudioContext;
+
+        if(AudioCtx){
+
+            audioContext=
+                new AudioCtx();
+
+        }
+
+    }
+
+    if(
+        audioContext &&
+        audioContext.state==="suspended"
+    ){
+
+        audioContext.resume();
+
+    }
+
+    return audioContext;
+
+}
+
+
+function sound(
+    frequency=500,
+    duration=.06,
+    type="sine",
+    volume=.025
+){
 
     try{
 
-        if(!audioCtx){
+        const ctx=audio();
 
-            audioCtx=
-                new(window.AudioContext||
-                window.webkitAudioContext)();
-        }
+        if(!ctx) return;
 
-        const o=
-            audioCtx.createOscillator();
+        const osc=
+            ctx.createOscillator();
 
-        const g=
-            audioCtx.createGain();
+        const gain=
+            ctx.createGain();
 
-        o.connect(g);
-        g.connect(audioCtx.destination);
+        osc.type=type;
 
-        let freq=500;
+        osc.frequency.value=
+            frequency;
 
-        if(type==="success")freq=760;
-        if(type==="error")freq=130;
-        if(type==="money")freq=900;
-        if(type==="win")freq=1100;
-        if(type==="boom")freq=80;
+        gain.gain.setValueAtTime(
+            volume,
+            ctx.currentTime
+        );
 
-        o.frequency.value=freq;
-
-        o.type=
-            type==="boom"
-            ?"sawtooth"
-            :"sine";
-
-        g.gain.setValueAtTime(
+        gain.gain.exponentialRampToValueAtTime(
             .001,
-            audioCtx.currentTime
+            ctx.currentTime+duration
         );
 
-        g.gain.exponentialRampToValueAtTime(
-            .09,
-            audioCtx.currentTime+.02
-        );
+        osc.connect(gain);
+        gain.connect(ctx.destination);
 
-        g.gain.exponentialRampToValueAtTime(
-            .001,
-            audioCtx.currentTime+.18
-        );
+        osc.start();
 
-        o.start();
-
-        o.stop(
-            audioCtx.currentTime+.2
+        osc.stop(
+            ctx.currentTime+duration
         );
 
     }catch(e){}
+
 }
 
-/* ================= HELPERS ================= */
+
+function successSound(){
+
+    sound(523,.08,"sine",.035);
+
+    setTimeout(
+        ()=>sound(784,.12,"sine",.03),
+        70
+    );
+
+}
+
+
+function errorSound(){
+
+    sound(180,.12,"sawtooth",.035);
+
+}
+
+
+function haptic(ms=12){
+
+    if(
+        navigator.vibrate
+    ){
+
+        navigator.vibrate(ms);
+
+    }
+
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
 
 function save(){
+
     localStorage.setItem(
-        KEY,
-        JSON.stringify(account)
+        USERS_KEY,
+        JSON.stringify(users)
     );
+
 }
+
+
+function user(){
+
+    return users.find(
+        u=>u.id===currentUserId
+    );
+
+}
+
 
 function money(n){
 
-    return Number(n||0).toLocaleString(
-        "ru-RU",
-        {
-            minimumFractionDigits:2,
-            maximumFractionDigits:2
-        }
-    )+" ₽";
+    return Number(n||0)
+        .toLocaleString("ru-RU")+" ₽";
+
 }
+
+
+function now(){
+
+    return new Date()
+        .toLocaleString(
+            "ru-RU",
+            {
+                day:"2-digit",
+                month:"2-digit",
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+}
+
 
 function toast(text){
 
-    const el=
+    const t=
         document.getElementById("toast");
 
-    el.textContent=text;
+    t.textContent=text;
 
-    el.classList.add("show");
+    t.classList.add("show");
 
-    setTimeout(
-        ()=>el.classList.remove("show"),
-        2200
+    clearTimeout(
+        window.toastTimer
     );
-}
 
-function today(){
-
-    return new Date()
-        .toLocaleDateString("ru-RU");
-}
-
-function randomCard(){
-
-    let a=[];
-
-    for(let i=0;i<4;i++){
-
-        a.push(
-            Math.floor(
-                1000+
-                Math.random()*9000
-            )
+    window.toastTimer=
+        setTimeout(
+            ()=>{
+                t.classList.remove("show");
+            },
+            2200
         );
+
+}
+
+
+/* =========================================================
+   INITIAL SCREEN
+========================================================= */
+
+function init(){
+
+    renderMines();
+
+    if(currentUserId && user()){
+
+        showPinScreen();
+
+    }else{
+
+        showRegister();
+
     }
 
-    return a.join(" ");
 }
 
-function escapeHTML(str){
+
+function showPinScreen(){
+
+    document.getElementById(
+        "pinScreen"
+    ).style.display="flex";
+
+    document.getElementById(
+        "registerScreen"
+    ).style.display="none";
+
+    document.getElementById(
+        "bank"
+    ).style.display="none";
+
+    const u=user();
+
+    document.getElementById(
+        "pinName"
+    ).textContent=
+        u ? u.first : "Добро пожаловать";
+
+    currentPin="";
+
+    updatePinDots();
+
+}
+
+
+function showRegister(){
+
+    document.getElementById(
+        "pinScreen"
+    ).style.display="none";
+
+    document.getElementById(
+        "registerScreen"
+    ).style.display="block";
+
+    document.getElementById(
+        "bank"
+    ).style.display="none";
+
+}
+
+
+function showLoginFromRegister(){
+
+    if(users.length){
+
+        currentUserId=
+            users[0].id;
+
+        localStorage.setItem(
+            "SVT_BANK_LAST_USER",
+            currentUserId
+        );
+
+        showPinScreen();
+
+    }else{
+
+        toast(
+            "Сначала создайте аккаунт"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   PIN
+========================================================= */
+
+function pinInput(number){
+
+    if(currentPin.length>=6){
+
+        return;
+
+    }
+
+    sound(600,.035,"sine",.018);
+    haptic(7);
+
+    currentPin+=number;
+
+    updatePinDots();
+
+    if(currentPin.length===user().pin.length){
+
+        setTimeout(
+            verifyPin,
+            130
+        );
+
+    }
+
+}
+
+
+function updatePinDots(){
+
+    const dots=
+        document.querySelectorAll(
+            ".pin-dot"
+        );
+
+    dots.forEach(
+        (dot,index)=>{
+
+            dot.classList.toggle(
+                "filled",
+                index<currentPin.length
+            );
+
+        }
+    );
+
+}
+
+
+function verifyPin(){
+
+    const u=user();
+
+    if(
+        currentPin===
+        String(u.pin)
+    ){
+
+        successSound();
+        haptic(30);
+
+        openBank();
+
+    }else{
+
+        errorSound();
+        haptic([30,40,30]);
+
+        const dots=
+            document.querySelectorAll(
+                ".pin-dot"
+            );
+
+        dots.forEach(
+            d=>d.classList.add("error")
+        );
+
+        document.getElementById(
+            "pinMessage"
+        ).classList.add("visible");
+
+        setTimeout(
+            ()=>{
+
+                dots.forEach(
+                    d=>d.classList.remove(
+                        "error"
+                    )
+                );
+
+                document.getElementById(
+                    "pinMessage"
+                ).classList.remove(
+                    "visible"
+                );
+
+                currentPin="";
+
+                updatePinDots();
+
+            },
+            650
+        );
+
+    }
+
+}
+
+
+function logoutPin(){
+
+    sound(250,.06,"sine",.02);
+    haptic(10);
+
+    currentUserId=null;
+
+    localStorage.removeItem(
+        "SVT_BANK_LAST_USER"
+    );
+
+    showRegister();
+
+}
+
+
+function forgotPin(){
+
+    toast(
+        "Для демо восстановление доступно через выход"
+    );
+
+    haptic(10);
+
+}
+
+
+function fakeBiometric(){
+
+    sound(720,.08,"sine",.025);
+
+    haptic(20);
+
+    toast(
+        "Биометрия доступна только в приложении"
+    );
+
+}
+
+
+/* =========================================================
+   REGISTRATION
+========================================================= */
+
+function register(){
+
+    const first=
+        document.getElementById(
+            "firstName"
+        ).value.trim();
+
+    const last=
+        document.getElementById(
+            "lastName"
+        ).value.trim();
+
+    let username=
+        document.getElementById(
+            "username"
+        ).value.trim();
+
+    const login=
+        document.getElementById(
+            "regLogin"
+        ).value.trim();
+
+    const password=
+        document.getElementById(
+            "regPassword"
+        ).value;
+
+    const pin=
+        document.getElementById(
+            "regPin"
+        ).value.trim();
+
+
+    if(
+        !first ||
+        !last ||
+        !username ||
+        !login ||
+        !password ||
+        !pin
+    ){
+
+        errorSound();
+        toast("Заполните все поля");
+        return;
+
+    }
+
+
+    if(
+        !/^\d{4,6}$/.test(pin)
+    ){
+
+        errorSound();
+        toast("PIN должен содержать 4–6 цифр");
+        return;
+
+    }
+
+
+    if(!username.startsWith("@")){
+
+        username="@"+username;
+
+    }
+
+
+    if(
+        users.some(
+            u=>
+                u.login.toLowerCase()===
+                login.toLowerCase()
+        )
+    ){
+
+        toast("Такой логин уже существует");
+        return;
+
+    }
+
+
+    if(
+        users.some(
+            u=>
+                u.username.toLowerCase()===
+                username.toLowerCase()
+        )
+    ){
+
+        toast("Такой юзернейм уже существует");
+        return;
+
+    }
+
+
+    const newUser={
+
+        id:
+            "user_"+Date.now()+
+            Math.random()
+                .toString(36)
+                .slice(2),
+
+        first,
+        last,
+
+        username,
+
+        login,
+        password,
+
+        pin,
+
+        balance:0,
+
+        income:0,
+        expense:0,
+
+        clicker:0,
+
+        card:null,
+
+        theme:"dark",
+
+        tx:[]
+
+    };
+
+
+    users.push(newUser);
+
+    currentUserId=
+        newUser.id;
+
+    localStorage.setItem(
+        "SVT_BANK_LAST_USER",
+        currentUserId
+    );
+
+    save();
+
+    successSound();
+
+    haptic(30);
+
+    showPinScreen();
+
+    toast(
+        "Аккаунт создан • введите PIN"
+    );
+
+}
+
+
+/* =========================================================
+   BANK OPEN
+========================================================= */
+
+function openBank(){
+
+    document.getElementById(
+        "pinScreen"
+    ).style.display="none";
+
+    document.getElementById(
+        "registerScreen"
+    ).style.display="none";
+
+    document.getElementById(
+        "bank"
+    ).style.display="block";
+
+    applyTheme();
+    update();
+
+}
+
+
+function logout(){
+
+    currentUserId=null;
+
+    localStorage.removeItem(
+        "SVT_BANK_LAST_USER"
+    );
+
+    location.reload();
+
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+function cardHTML(){
+
+    const u=user();
+
+    if(!u.card){
+
+        return `
+        <div class="section"
+             style="text-align:center;color:var(--muted)">
+            Виртуальная карта ещё не выпущена.
+        </div>
+        `;
+
+    }
+
+    return `
+
+    <div class="virtual-card">
+
+        <div class="card-shine"></div>
+
+        <div class="card-bank">
+            SVT BANK
+        </div>
+
+        <div class="card-chip"></div>
+
+        <div class="card-number">
+            ${u.card}
+        </div>
+
+        <div class="card-owner">
+            ${u.first} ${u.last}
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+
+function createCard(){
+
+    const u=user();
+
+    if(u.card){
+
+        toast("Карта уже выпущена");
+        return;
+
+    }
+
+
+    function r(){
+
+        return Math.floor(
+            1000+
+            Math.random()*9000
+        );
+
+    }
+
+
+    u.card=
+        "4276 "+
+        r()+" "+
+        r()+" "+
+        r();
+
+
+    save();
+    update();
+
+    successSound();
+    haptic(25);
+
+    toast(
+        "Виртуальная карта выпущена"
+    );
+
+}
+
+
+/* =========================================================
+   TOP UP
+========================================================= */
+
+function openTopup(){
+
+    const u=user();
+
+    if(!u.card){
+
+        toast(
+            "Сначала выпустите виртуальную карту"
+        );
+
+        openPageByName("profile");
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "topupContent"
+    ).innerHTML=`
+
+        <div style="
+            padding:14px;
+            border-radius:16px;
+            background:var(--card);
+            margin-bottom:13px;
+        ">
+            Карта •••• ${u.card.slice(-4)}
+        </div>
+
+    `;
+
+
+    document.getElementById(
+        "topupModal"
+    ).classList.add("show");
+
+}
+
+
+function topup(){
+
+    const u=user();
+
+    const amount=
+        Number(
+            document.getElementById(
+                "topupAmount"
+            ).value
+        );
+
+
+    if(amount<=0){
+
+        toast("Введите сумму");
+        return;
+
+    }
+
+
+    u.balance+=amount;
+
+    u.income+=amount;
+
+
+    addTx(
+        "＋",
+        "Пополнение",
+        "Пополнение виртуальной карты",
+        amount,
+        "plus"
+    );
+
+
+    document.getElementById(
+        "topupAmount"
+    ).value="";
+
+
+    closeModal(
+        "topupModal"
+    );
+
+    save();
+    update();
+
+    successSound();
+    haptic(20);
+
+    toast(
+        "Пополнено на "+money(amount)
+    );
+
+}
+
+
+/* =========================================================
+   TRANSFER
+========================================================= */
+
+function openTransfer(){
+
+    document.getElementById(
+        "transferModal"
+    ).classList.add("show");
+
+}
+
+
+function transfer(){
+
+    const from=user();
+
+    const username=
+        document.getElementById(
+            "transferUsername"
+        ).value.trim();
+
+    const amount=
+        Number(
+            document.getElementById(
+                "transferAmount"
+            ).value
+        );
+
+
+    if(
+        !username ||
+        amount<=0
+    ){
+
+        toast("Заполните данные");
+        return;
+
+    }
+
+
+    if(amount>from.balance){
+
+        errorSound();
+        toast("Недостаточно средств");
+        return;
+
+    }
+
+
+    const to=
+        users.find(
+            u=>
+                u.username.toLowerCase()===
+                username.toLowerCase()
+        );
+
+
+    if(!to){
+
+        toast("Пользователь не найден");
+        return;
+
+    }
+
+
+    if(to.id===from.id){
+
+        toast("Нельзя перевести себе");
+        return;
+
+    }
+
+
+    from.balance-=amount;
+    from.expense+=amount;
+
+
+    addTx(
+        "↗",
+        "Перевод",
+        "Перевод "+to.username,
+        amount,
+        "minus"
+    );
+
+
+    to.balance+=amount;
+    to.income+=amount;
+
+
+    to.tx.unshift({
+
+        icon:"↙",
+        title:"Получение перевода",
+        desc:"От "+from.username,
+        amount,
+        type:"plus",
+        date:now()
+
+    });
+
+
+    save();
+
+    closeModal(
+        "transferModal"
+    );
+
+
+    document.getElementById(
+        "transferUsername"
+    ).value="";
+
+    document.getElementById(
+        "transferAmount"
+    ).value="";
+
+
+    update();
+
+    successSound();
+    haptic(30);
+
+    toast(
+        "Перевод выполнен"
+    );
+
+}
+
+
+/* =========================================================
+   TRANSACTIONS
+========================================================= */
+
+function addTx(
+    icon,
+    title,
+    desc,
+    amount,
+    type
+){
+
+    const u=user();
+
+    u.tx.unshift({
+
+        icon,
+        title,
+        desc,
+        amount,
+        type,
+        date:now()
+
+    });
+
+
+    if(u.tx.length>60){
+
+        u.tx=
+            u.tx.slice(0,60);
+
+    }
+
+}
+
+
+function txHTML(t){
+
+    return `
+
+    <div class="tx">
+
+        <div class="tx-icon">
+            ${t.icon}
+        </div>
+
+        <div class="tx-info">
+
+            <div class="tx-title">
+                ${safe(t.title)}
+            </div>
+
+            <div class="tx-date">
+                ${safe(t.desc)}
+                ·
+                ${safe(t.date)}
+            </div>
+
+        </div>
+
+        <div class="tx-amount
+            ${t.type==="plus"?"green":"red"}">
+
+            ${t.type==="plus"?"+":"-"}
+            ${money(t.amount)}
+
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   CLICKER
+========================================================= */
+
+function clickCoin(e){
+
+    const u=user();
+
+    u.balance+=1;
+    u.income+=1;
+    u.clicker+=1;
+
+
+    const coin=
+        document.getElementById(
+            "coin"
+        );
+
+    coin.classList.remove("hit");
+
+    void coin.offsetWidth;
+
+    coin.classList.add("hit");
+
+
+    sound(
+        680+
+        Math.random()*150,
+        .045,
+        "sine",
+        .018
+    );
+
+    haptic(7);
+
+
+    const float=
+        document.createElement("div");
+
+    float.className="coin-float";
+
+    float.textContent="+1 ₽";
+
+    float.style.left=
+        (e.clientX-10)+"px";
+
+    float.style.top=
+        (e.clientY-20)+"px";
+
+    document.body.appendChild(
+        float
+    );
+
+    setTimeout(
+        ()=>float.remove(),
+        850
+    );
+
+
+    save();
+    update();
+
+}
+
+
+/* =========================================================
+   MINES
+========================================================= */
+
+let mines=[];
+let mineActive=false;
+let canCashout=false;
+
+let mineBet=0;
+let safeOpened=0;
+let potentialWin=0;
+
+
+function renderMines(){
+
+    const grid=
+        document.getElementById(
+            "mineGrid"
+        );
+
+    grid.innerHTML="";
+
+
+    for(
+        let i=0;
+        i<25;
+        i++
+    ){
+
+        const b=
+            document.createElement(
+                "button"
+            );
+
+        b.className=
+            "mine-cell";
+
+        b.onclick=
+            ()=>openMine(i,b);
+
+        grid.appendChild(b);
+
+    }
+
+}
+
+
+function startMines(){
+
+    const u=user();
+
+    if(
+        mineActive ||
+        canCashout
+    ){
+
+        toast(
+            "Сначала завершите игру"
+        );
+
+        return;
+
+    }
+
+
+    const bet=
+        Number(
+            document.getElementById(
+                "bet"
+            ).value
+        );
+
+    const count=
+        Number(
+            document.getElementById(
+                "mineCount"
+            ).value
+        );
+
+
+    if(bet<=0){
+
+        toast("Введите ставку");
+        return;
+
+    }
+
+
+    if(
+        count<1 ||
+        count>24
+    ){
+
+        toast(
+            "Количество мин: 1–24"
+        );
+
+        return;
+
+    }
+
+
+    if(bet>u.balance){
+
+        errorSound();
+        toast(
+            "Недостаточно средств"
+        );
+
+        return;
+
+    }
+
+
+    /*
+       СТАВКА СПИСЫВАЕТСЯ
+       ТОЛЬКО ПРИ НАЖАТИИ
+       «НАЧАТЬ ИГРУ».
+    */
+
+    u.balance-=bet;
+    u.expense+=bet;
+
+
+    addTx(
+        "💣",
+        "Mines",
+        "Ставка",
+        bet,
+        "minus"
+    );
+
+
+    mineBet=bet;
+
+    potentialWin=bet;
+
+    safeOpened=0;
+
+    mineActive=true;
+
+    canCashout=false;
+
+
+    mines=
+        Array(25).fill(false);
+
+
+    let placed=0;
+
+
+    while(
+        placed<count
+    ){
+
+        const index=
+            Math.floor(
+                Math.random()*25
+            );
+
+        if(!mines[index]){
+
+            mines[index]=true;
+
+            placed++;
+
+        }
+
+    }
+
+
+    document.getElementById(
+        "potential"
+    ).textContent=
+        "Потенциальный выигрыш: "+
+        money(potentialWin);
+
+
+    document.getElementById(
+        "cashout"
+    ).disabled=true;
+
+
+    renderMines();
+
+    save();
+    update();
+
+    sound(420,.08,"sine",.025);
+    haptic(20);
+
+    toast(
+        "Игра началась"
+    );
+
+}
+
+
+function openMine(i,b){
+
+    if(!mineActive){
+
+        return;
+
+    }
+
+
+    if(
+        b.classList.contains(
+            "open"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    b.classList.add("open");
+
+
+    if(mines[i]){
+
+        b.classList.add("bomb");
+
+        b.textContent="💣";
+
+        mineActive=false;
+
+        canCashout=false;
+
+        potentialWin=0;
+
+
+        document.getElementById(
+            "potential"
+        ).textContent=
+            "Потенциальный выигрыш: 0 ₽";
+
+
+        document.getElementById(
+            "cashout"
+        ).disabled=true;
+
+
+        revealMines();
+
+        save();
+        update();
+
+        errorSound();
+        haptic([40,60,40]);
+
+        toast(
+            "💥 Мина! Ставка проиграна"
+        );
+
+        return;
+
+    }
+
+
+    b.classList.add("safe");
+
+    b.textContent="💎";
+
+
+    safeOpened++;
+
+
+    const multiplier=
+        1+
+        safeOpened*.35;
+
+
+    potentialWin=
+        Math.floor(
+            mineBet*multiplier
+        );
+
+
+    canCashout=true;
+
+
+    document.getElementById(
+        "potential"
+    ).textContent=
+        "Потенциальный выигрыш: "+
+        money(potentialWin);
+
+
+    document.getElementById(
+        "cashout"
+    ).disabled=false;
+
+
+    sound(
+        700+
+        safeOpened*40,
+        .06,
+        "sine",
+        .02
+    );
+
+    haptic(10);
+
+
+    toast(
+        "Безопасно • x"+
+        multiplier.toFixed(2)
+    );
+
+
+    /*
+       ВСЕ безопасные клетки открыты.
+       Игра заканчивается,
+       но выигрыш можно забрать.
+    */
+
+    const totalMines=
+        mines.filter(Boolean).length;
+
+
+    if(
+        safeOpened>=
+        25-totalMines
+    ){
+
+        mineActive=false;
+
+        toast(
+            "🎉 Все клетки открыты!"
+        );
+
+    }
+
+
+    save();
+
+}
+
+
+function revealMines(){
+
+    const cells=
+        document.querySelectorAll(
+            ".mine-cell"
+        );
+
+
+    mines.forEach(
+        (isMine,i)=>{
+
+            if(isMine){
+
+                cells[i]
+                    .classList.add(
+                        "open",
+                        "bomb"
+                    );
+
+                cells[i].textContent="💣";
+
+            }
+
+        }
+    );
+
+}
+
+
+/*
+   ВАЖНО:
+
+   potentialWin НЕ является балансом.
+
+   Деньги появляются на balance
+   только после cashout().
+*/
+
+function cashout(){
+
+    const u=user();
+
+
+    if(!canCashout){
+
+        toast(
+            "Нет выигрыша"
+        );
+
+        return;
+
+    }
+
+
+    if(
+        potentialWin<=mineBet
+    ){
+
+        toast(
+            "Откройте безопасную клетку"
+        );
+
+        return;
+
+    }
+
+
+    const reward=
+        potentialWin;
+
+
+    u.balance+=reward;
+
+    u.income+=reward;
+
+
+    addTx(
+        "💎",
+        "Mines",
+        "Забран выигрыш",
+        reward,
+        "plus"
+    );
+
+
+    mineActive=false;
+    canCashout=false;
+
+    potentialWin=0;
+    safeOpened=0;
+
+
+    document.getElementById(
+        "potential"
+    ).textContent=
+        "Потенциальный выигрыш: 0 ₽";
+
+
+    document.getElementById(
+        "cashout"
+    ).disabled=true;
+
+
+    save();
+    update();
+
+    successSound();
+    haptic(35);
+
+    toast(
+        "💰 Выигрыш: "+
+        money(reward)
+    );
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function openPage(name,button){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            p=>p.classList.remove(
+                "active"
+            )
+        );
+
+
+    document
+        .getElementById(
+            "page-"+name
+        )
+        .classList.add(
+            "active"
+        );
+
+
+    document
+        .querySelectorAll(
+            ".nav-btn"
+        )
+        .forEach(
+            b=>b.classList.remove(
+                "active"
+            )
+        );
+
+
+    if(button){
+
+        button.classList.add(
+            "active"
+        );
+
+    }
+
+
+    sound(
+        420,
+        .035,
+        "sine",
+        .012
+    );
+
+    haptic(6);
+
+}
+
+
+function openPageByName(name){
+
+    const buttons=
+        document.querySelectorAll(
+            ".nav-btn"
+        );
+
+    const index={
+        home:0,
+        analytics:1,
+        clicker:2,
+        casino:3,
+        profile:4
+    }[name];
+
+
+    openPage(
+        name,
+        buttons[index]
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE UI
+========================================================= */
+
+function update(){
+
+    const u=user();
+
+    if(!u) return;
+
+
+    const initials=
+        (
+            u.first[0]+
+            u.last[0]
+        ).toUpperCase();
+
+
+    document.getElementById(
+        "helloName"
+    ).textContent=
+        u.first;
+
+
+    document.getElementById(
+        "mainBalance"
+    ).textContent=
+        money(u.balance);
+
+
+    document.getElementById(
+        "homeIncome"
+    ).textContent=
+        money(u.income);
+
+
+    document.getElementById(
+        "homeExpense"
+    ).textContent=
+        money(u.expense);
+
+
+    document.getElementById(
+        "topAvatar"
+    ).textContent=
+        initials;
+
+
+    document.getElementById(
+        "bigAvatar"
+    ).textContent=
+        initials;
+
+
+    document.getElementById(
+        "profileName"
+    ).textContent=
+        u.first+
+        " "+
+        u.last;
+
+
+    document.getElementById(
+        "profileLogin"
+    ).textContent=
+        u.username;
+
+
+    document.getElementById(
+        "homeCard"
+    ).innerHTML=
+        cardHTML();
+
+
+    document.getElementById(
+        "profileCard"
+    ).innerHTML=
+        cardHTML();
+
+
+    document.getElementById(
+        "cardButton"
+    ).style.display=
+        u.card?
+        "none":
+        "block";
+
+
+    document.getElementById(
+        "clickCount"
+    ).textContent=
+        money(u.clicker);
+
+
+    document.getElementById(
+        "clickerBalance"
+    ).textContent=
+        money(u.balance);
+
+
+    document.getElementById(
+        "casinoBalance"
+    ).textContent=
+        money(u.balance);
+
+
+    document.getElementById(
+        "analyticsIncome"
+    ).textContent=
+        money(u.income);
+
+
+    document.getElementById(
+        "analyticsExpense"
+    ).textContent=
+        money(u.expense);
+
+
+    renderTransactions();
+    renderChart();
+
+}
+
+
+/* =========================================================
+   TRANSACTIONS
+========================================================= */
+
+function renderTransactions(){
+
+    const u=user();
+
+    const home=
+        document.getElementById(
+            "homeTransactions"
+        );
+
+    const all=
+        document.getElementById(
+            "allTransactions"
+        );
+
+
+    if(!u.tx.length){
+
+        home.innerHTML=
+            `<div style="
+                color:var(--muted);
+                padding:8px 0;
+            ">
+                Пока нет операций
+            </div>`;
+
+
+        all.innerHTML=
+            `<div style="
+                color:var(--muted);
+                padding:8px 0;
+            ">
+                Пока нет операций
+            </div>`;
+
+        return;
+
+    }
+
+
+    home.innerHTML=
+        u.tx
+        .slice(0,5)
+        .map(txHTML)
+        .join("");
+
+
+    all.innerHTML=
+        u.tx
+        .map(txHTML)
+        .join("");
+
+}
+
+
+/* =========================================================
+   CHART
+========================================================= */
+
+function renderChart(){
+
+    const u=user();
+
+    const chart=
+        document.getElementById(
+            "chart"
+        );
+
+
+    if(!chart) return;
+
+
+    const max=
+        Math.max(
+            u.income,
+            u.expense,
+            1
+        );
+
+
+    const incomeHeight=
+        Math.max(
+            10,
+            u.income/max*150
+        );
+
+
+    const expenseHeight=
+        Math.max(
+            10,
+            u.expense/max*150
+        );
+
+
+    chart.innerHTML=`
+
+        <div style="
+            flex:1;
+            height:${incomeHeight}px;
+            border-radius:14px 14px 5px 5px;
+            background:var(--green);
+            opacity:.8;
+            animation:pageIn .5s ease;
+        "></div>
+
+        <div style="
+            flex:1;
+            height:${expenseHeight}px;
+            border-radius:14px 14px 5px 5px;
+            background:var(--red);
+            opacity:.8;
+            animation:pageIn .6s ease;
+        "></div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   THEMES
+========================================================= */
+
+function setTheme(theme){
+
+    const u=user();
+
+    u.theme=theme;
+
+    applyTheme();
+
+    save();
+
+    sound(550,.05,"sine",.015);
+    haptic(8);
+
+    toast(
+        "Тема изменена"
+    );
+
+}
+
+
+function applyTheme(){
+
+    const u=user();
+
+    if(!u) return;
+
+
+    document.body.classList.remove(
+        "light",
+        "purple",
+        "red",
+        "green",
+        "blue"
+    );
+
+
+    if(
+        u.theme!=="dark"
+    ){
+
+        document.body.classList.add(
+            u.theme
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+function closeModal(id){
+
+    document.getElementById(
+        id
+    ).classList.remove(
+        "show"
+    );
+
+}
+
+
+document
+.querySelectorAll(".modal")
+.forEach(
+    modal=>{
+
+        modal.addEventListener(
+            "click",
+            e=>{
+
+                if(
+                    e.target===modal
+                ){
+
+                    closeModal(
+                        modal.id
+                    );
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+/* =========================================================
+   SAFE HTML
+========================================================= */
+
+function safe(str){
 
     return String(str)
         .replaceAll("&","&amp;")
@@ -1266,2957 +4306,15 @@ function escapeHTML(str){
         .replaceAll(">","&gt;")
         .replaceAll('"',"&quot;")
         .replaceAll("'","&#039;");
+
 }
 
-function addTx(title,amount,icon="💳"){
 
-    account.transactions.unshift({
+/* =========================================================
+   START
+========================================================= */
 
-        title,
-        amount,
-        icon,
-        date:today()
-
-    });
-
-    account.transactions=
-        account.transactions.slice(0,30);
-}
-
-/* ================= AUTH ================= */
-
-function authScreen(register=false){
-
-    document.body.innerHTML=`
-
-        <div class="auth">
-
-            <div class="authBox">
-
-                <div class="authLogo">
-                    svtvn банк
-                </div>
-
-                <h1>
-                    ${register?
-                    "Создать аккаунт":
-                    "Войти в аккаунт"}
-                </h1>
-
-                <p>
-                    ${
-                        register?
-                        "Создайте банковский аккаунт.":
-                        "Введите данные своего аккаунта."
-                    }
-                </p>
-
-                ${
-                    register?
-
-                    `
-                    <input
-                        id="regName"
-                        class="input"
-                        placeholder="Имя и фамилия">
-
-                    <input
-                        id="regUsername"
-                        class="input"
-                        placeholder="Юзернейм">
-
-                    <input
-                        id="regLogin"
-                        class="input"
-                        placeholder="Логин">
-
-                    <input
-                        id="regPass"
-                        class="input"
-                        type="password"
-                        placeholder="Пароль">
-
-                    <input
-                        id="regPin"
-                        class="input"
-                        inputmode="numeric"
-                        maxlength="4"
-                        placeholder="Код-пароль (4 цифры)">
-                    `
-
-                    :
-
-                    `
-                    <input
-                        id="login"
-                        class="input"
-                        placeholder="Логин">
-
-                    <input
-                        id="pass"
-                        class="input"
-                        type="password"
-                        placeholder="Пароль">
-                    `
-                }
-
-                <button
-                    class="btn"
-                    onclick="${
-                        register?
-                        "register()":
-                        "login()"
-                    }">
-
-                    ${
-                        register?
-                        "Создать аккаунт":
-                        "Войти"
-                    }
-
-                </button>
-
-                <div
-                    class="authSwitch"
-                    onclick="${
-                        register?
-                        "authScreen(false)":
-                        "authScreen(true)"
-                    }">
-
-                    ${
-                        register?
-                        "У меня уже есть аккаунт":
-                        "Создать новый аккаунт"
-                    }
-
-                </div>
-
-            </div>
-
-        </div>
-    `;
-}
-
-window.register=function(){
-
-    const name=
-        document.getElementById("regName")
-        .value.trim();
-
-    const username=
-        document.getElementById("regUsername")
-        .value.trim();
-
-    const login=
-        document.getElementById("regLogin")
-        .value.trim();
-
-    const pass=
-        document.getElementById("regPass")
-        .value;
-
-    const pin=
-        document.getElementById("regPin")
-        .value;
-
-    if(
-        !name||
-        !username||
-        !login||
-        !pass||
-        !/^\d{4}$/.test(pin)
-    ){
-
-        toast("Заполни все поля");
-        return;
-    }
-
-    account={
-
-        name,
-        username,
-        login,
-        password:pass,
-        pin,
-
-        balance:0,
-
-        card:null,
-
-        transactions:[],
-
-        income:[],
-        expenses:[],
-
-        theme:"midnight",
-
-        clicker:0
-    };
-
-    save();
-
-    sound("success");
-
-    pinScreen();
-};
-
-window.login=function(){
-
-    const login=
-        document.getElementById("login").value;
-
-    const pass=
-        document.getElementById("pass").value;
-
-    if(
-        !account||
-        login!==account.login||
-        pass!==account.password
-    ){
-
-        toast("Неверный логин или пароль");
-
-        sound("error");
-
-        return;
-    }
-
-    pinScreen();
-};
-
-/* ================= PIN ================= */
-
-function pinScreen(){
-
-    document.body.innerHTML=`
-
-        <div class="pinScreen">
-
-            <div class="pinLogo">
-                svtvn банк
-            </div>
-
-            <div class="pinName">
-                ${escapeHTML(
-                    account.name.split(" ")[0]
-                )}
-            </div>
-
-            <div
-                id="dots"
-                class="dots">
-
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-
-            </div>
-
-            <div class="pinKeys">
-
-                ${
-                    [1,2,3,4,5,6,7,8,9]
-                    .map(
-                        n=>
-                        `<button
-                        class="pinKey"
-                        onclick="enterPin(${n})">
-                        ${n}
-                        </button>`
-                    )
-                    .join("")
-                }
-
-                <button
-                    class="pinKey"
-                    onclick="authScreen(false)">
-                    ×
-                </button>
-
-                <button
-                    class="pinKey"
-                    onclick="enterPin(0)">
-                    0
-                </button>
-
-                <button
-                    class="pinKey"
-                    onclick="deletePin()">
-                    ⌫
-                </button>
-
-            </div>
-
-            <div class="pinBottom">
-                Введите код-пароль
-            </div>
-
-        </div>
-    `;
-
-    window.pinValue="";
-}
-
-window.enterPin=function(n){
-
-    if(window.pinValue.length>=4)
-        return;
-
-    sound("click");
-
-    window.pinValue+=n;
-
-    updateDots();
-
-    if(window.pinValue.length===4){
-
-        setTimeout(()=>{
-
-            if(window.pinValue===account.pin){
-
-                sound("success");
-
-                render();
-
-            }else{
-
-                sound("error");
-
-                const screen=
-                    document.querySelector(
-                        ".pinScreen"
-                    );
-
-                screen.classList.add("shake");
-
-                setTimeout(
-                    ()=>screen.classList.remove("shake"),
-                    400
-                );
-
-                window.pinValue="";
-
-                updateDots();
-            }
-
-        },130);
-    }
-};
-
-window.deletePin=function(){
-
-    window.pinValue=
-        window.pinValue.slice(0,-1);
-
-    updateDots();
-};
-
-function updateDots(){
-
-    document
-        .querySelectorAll(".dot")
-        .forEach((d,i)=>{
-
-            d.classList.toggle(
-                "filled",
-                i<window.pinValue.length
-            );
-
-        });
-}
-
-/* ================= RENDER ================= */
-
-function render(){
-
-    document.body.innerHTML=`
-
-        <div class="app">
-
-            <header class="top">
-
-                <div class="logo">
-                    svtvn банк
-                </div>
-
-                <div class="topBalance">
-                    ${money(account.balance)}
-                </div>
-
-            </header>
-
-            ${homePage()}
-
-            ${casinoPage()}
-
-            ${clickerPage()}
-
-            ${historyPage()}
-
-            ${profilePage()}
-
-            <nav class="nav">
-
-                ${navButton(
-                    "home",
-                    "⌂",
-                    "Главная"
-                )}
-
-                ${navButton(
-                    "casino",
-                    "🎰",
-                    "Казино"
-                )}
-
-                ${navButton(
-                    "clicker",
-                    "₽",
-                    "Заработок"
-                )}
-
-                ${navButton(
-                    "history",
-                    "↗",
-                    "История"
-                )}
-
-                ${navButton(
-                    "profile",
-                    "●",
-                    "Профиль"
-                )}
-
-            </nav>
-
-        </div>
-    `;
-
-    document.body.className=
-        "theme-"+account.theme;
-
-    if(
-        state.page==="casino"&&
-        state.casinoMode
-    ){
-        renderCasinoGame();
-    }
-}
-
-function navButton(id,icon,text){
-
-    return `
-        <button
-            class="navBtn ${
-                state.page===id?
-                "active":
-                ""
-            }"
-            onclick="go('${id}')">
-
-            <div class="navIcon">
-                ${icon}
-            </div>
-
-            <div class="navText">
-                ${text}
-            </div>
-
-        </button>
-    `;
-}
-
-window.go=function(page){
-
-    sound("click");
-
-    state.page=page;
-
-    state.casinoMode=null;
-
-    render();
-};
-
-/* ================= HOME ================= */
-
-function homePage(){
-
-    if(state.page!=="home")
-        return `
-            <section class="page"></section>
-        `;
-
-    const card=account.card;
-
-    return `
-
-    <section class="page active">
-
-        <div class="greeting">
-            Привет, ${
-                escapeHTML(
-                    account.name.split(" ")[0]
-                )
-            } 👋
-        </div>
-
-        <div class="sub">
-            Добро пожаловать обратно
-        </div>
-
-        <div class="balanceCard">
-
-            <div class="balanceLabel">
-                Доступно
-            </div>
-
-            <div class="balance">
-                ${money(account.balance)}
-            </div>
-
-            <div class="cardName">
-
-                ${
-                    card?
-                    escapeHTML(
-                        account.name.toUpperCase()
-                    ):
-                    "Карта не оформлена"
-                }
-
-            </div>
-
-            <div class="cardNumber">
-
-                ${
-                    card?
-                    escapeHTML(card):
-                    "•••• •••• •••• ••••"
-                }
-
-            </div>
-
-        </div>
-
-        <div class="actions">
-
-            <button
-                class="action"
-                onclick="transfer()">
-
-                <div class="actionIcon">
-                    ↗️
-                </div>
-
-                <div class="actionText">
-                    Перевод
-                </div>
-
-            </button>
-
-            <button
-                class="action"
-                onclick="deposit()">
-
-                <div class="actionIcon">
-                    ＋
-                </div>
-
-                <div class="actionText">
-                    Пополнить
-                </div>
-
-            </button>
-
-            <button
-                class="action"
-                onclick="loan()">
-
-                <div class="actionIcon">
-                    💰
-                </div>
-
-                <div class="actionText">
-                    Кредит
-                </div>
-
-            </button>
-
-            <button
-                class="action"
-                onclick="pay()">
-
-                <div class="actionIcon">
-                    💳
-                </div>
-
-                <div class="actionText">
-                    Платёж
-                </div>
-
-            </button>
-
-        </div>
-
-        <div class="sectionTitle">
-            Последние операции
-        </div>
-
-        <div class="card">
-
-            ${
-                account.transactions.length?
-
-                account.transactions
-                    .slice(0,5)
-                    .map(transaction)
-                    .join("")
-
-                :
-
-                `
-                <div
-                    style="
-                    color:var(--muted);
-                    text-align:center;
-                    padding:25px">
-
-                    Пока нет операций
-
-                </div>
-                `
-            }
-
-        </div>
-
-    </section>
-    `;
-}
-
-function transaction(tx){
-
-    return `
-
-        <div class="transaction">
-
-            <div class="txIcon">
-                ${escapeHTML(tx.icon)}
-            </div>
-
-            <div class="txInfo">
-
-                <div class="txTitle">
-                    ${escapeHTML(tx.title)}
-                </div>
-
-                <div class="txDate">
-                    ${escapeHTML(tx.date)}
-                </div>
-
-            </div>
-
-            <div class="${
-                tx.amount>=0?
-                "plus":
-                "minus"
-            }">
-
-                ${
-                    tx.amount>=0?
-                    "+":
-                    ""
-                }
-
-                ${money(tx.amount)}
-
-            </div>
-
-        </div>
-    `;
-}
-
-/* ================= DEPOSIT ================= */
-
-window.deposit=function(){
-
-    if(!account.card){
-
-        toast(
-            "Сначала оформите виртуальную карту"
-        );
-
-        return;
-    }
-
-    modal(`
-
-        <h2>
-            Пополнение
-        </h2>
-
-        <p style="color:var(--muted)">
-            Введите сумму пополнения.
-        </p>
-
-        <input
-            id="depAmount"
-            class="input"
-            type="number"
-            placeholder="Сумма">
-
-        <button
-            class="btn"
-            onclick="doDeposit()">
-
-            Пополнить
-
-        </button>
-
-        <button
-            class="btn secondary"
-            onclick="closeModal()">
-
-            Отмена
-
-        </button>
-    `);
-};
-
-window.doDeposit=function(){
-
-    const n=
-        Number(
-            document.getElementById(
-                "depAmount"
-            ).value
-        );
-
-    if(n<=0){
-
-        toast("Введите сумму");
-
-        return;
-    }
-
-    account.balance+=n;
-
-    addTx(
-        "Пополнение",
-        n,
-        "💳"
-    );
-
-    save();
-
-    closeModal();
-
-    sound("money");
-
-    render();
-};
-
-/* ================= TRANSFER ================= */
-
-window.transfer=function(){
-
-    if(!account.card){
-
-        toast(
-            "Нужна виртуальная карта"
-        );
-
-        return;
-    }
-
-    modal(`
-
-        <h2>
-            Перевод
-        </h2>
-
-        <input
-            id="recipient"
-            class="input"
-            placeholder="Юзернейм получателя">
-
-        <input
-            id="transferAmount"
-            class="input"
-            type="number"
-            placeholder="Сумма">
-
-        <button
-            class="btn"
-            onclick="doTransfer()">
-
-            Перевести
-
-        </button>
-
-        <button
-            class="btn secondary"
-            onclick="closeModal()">
-
-            Отмена
-
-        </button>
-
-    `);
-};
-
-window.doTransfer=function(){
-
-    const recipient=
-        document.getElementById(
-            "recipient"
-        ).value.trim();
-
-    const n=
-        Number(
-            document.getElementById(
-                "transferAmount"
-            ).value
-        );
-
-    if(!recipient||n<=0){
-
-        toast("Заполни данные");
-
-        return;
-    }
-
-    if(n>account.balance){
-
-        toast(
-            "Недостаточно средств"
-        );
-
-        sound("error");
-
-        return;
-    }
-
-    account.balance-=n;
-
-    addTx(
-        "Перевод @"+recipient,
-        -n,
-        "↗️"
-    );
-
-    save();
-
-    closeModal();
-
-    sound("money");
-
-    render();
-};
-
-/* ================= PAY ================= */
-
-window.pay=function(){
-
-    modal(`
-
-        <h2>
-            Оплата
-        </h2>
-
-        <input
-            id="payName"
-            class="input"
-            placeholder="Название платежа">
-
-        <input
-            id="payAmount"
-            class="input"
-            type="number"
-            placeholder="Сумма">
-
-        <button
-            class="btn"
-            onclick="doPay()">
-
-            Оплатить
-
-        </button>
-
-        <button
-            class="btn secondary"
-            onclick="closeModal()">
-
-            Отмена
-
-        </button>
-
-    `);
-};
-
-window.doPay=function(){
-
-    const name=
-        document.getElementById(
-            "payName"
-        ).value.trim();
-
-    const n=
-        Number(
-            document.getElementById(
-                "payAmount"
-            ).value
-        );
-
-    if(
-        n<=0||
-        n>account.balance
-    ){
-
-        toast(
-            "Недостаточно средств"
-        );
-
-        return;
-    }
-
-    account.balance-=n;
-
-    addTx(
-        name||"Платёж",
-        -n,
-        "💳"
-    );
-
-    save();
-
-    closeModal();
-
-    sound("money");
-
-    render();
-};
-
-/* ================= LOAN ================= */
-
-window.loan=function(){
-
-    modal(`
-
-        <h2>
-            Оформление кредита
-        </h2>
-
-        <p style="color:var(--muted)">
-            Демонстрационная функция.
-        </p>
-
-        <input
-            id="loanAmount"
-            class="input"
-            type="number"
-            placeholder="Сумма кредита">
-
-        <button
-            class="btn"
-            onclick="doLoan()">
-
-            Оформить
-
-        </button>
-
-        <button
-            class="btn secondary"
-            onclick="closeModal()">
-
-            Отмена
-
-        </button>
-
-    `);
-};
-
-window.doLoan=function(){
-
-    const n=
-        Number(
-            document.getElementById(
-                "loanAmount"
-            ).value
-        );
-
-    if(n<=0){
-
-        toast("Введите сумму");
-
-        return;
-    }
-
-    account.balance+=n;
-
-    addTx(
-        "Кредит",
-        n,
-        "💰"
-    );
-
-    save();
-
-    closeModal();
-
-    sound("success");
-
-    render();
-};
-
-/* ================= CASINO ================= */
-
-function casinoPage(){
-
-    if(state.page!=="casino")
-        return `
-            <section class="page"></section>
-        `;
-
-    if(state.casinoMode)
-        return `
-            <section
-                class="page active"
-                id="casinoGame">
-            </section>
-        `;
-
-    return `
-
-    <section class="page active">
-
-        <div class="casinoHero">
-
-            <h1>
-                Казино 🎰
-            </h1>
-
-            <p>
-                Игровые режимы на виртуальный баланс
-            </p>
-
-            <div style="font-size:13px">
-                Баланс:
-                <b>
-                    ${money(account.balance)}
-                </b>
-            </div>
-
-        </div>
-
-        <div class="games">
-
-            <div
-                class="gameCard"
-                onclick="openCasino('mines')">
-
-                <div class="gameGlow"></div>
-
-                <div class="gameEmoji">
-                    💣
-                </div>
-
-                <div class="gameName">
-                    Мины
-                </div>
-
-                <div class="gameDesc">
-                    Открывай клетки и забирай выигрыш
-                </div>
-
-            </div>
-
-            <div
-                class="gameCard"
-                onclick="openCasino('upgrader')">
-
-                <div class="gameGlow"></div>
-
-                <div class="gameEmoji">
-                    🎡
-                </div>
-
-                <div class="gameName">
-                    Upgrader
-                </div>
-
-                <div class="gameDesc">
-                    50% шанс удвоить ставку
-                </div>
-
-            </div>
-
-            <div
-                class="gameCard"
-                onclick="openCasino('crash')">
-
-                <div class="gameGlow"></div>
-
-                <div class="gameEmoji">
-                    🚀
-                </div>
-
-                <div class="gameName">
-                    Crash
-                </div>
-
-                <div class="gameDesc">
-                    Успей забрать выигрыш
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-    `;
-}
-
-window.openCasino=function(mode){
-
-    state.casinoMode=mode;
-
-    sound("click");
-
-    renderCasinoGame();
-};
-
-function renderCasinoGame(){
-
-    const container=
-        document.getElementById(
-            "casinoGame"
-        );
-
-    if(!container)
-        return;
-
-    if(state.casinoMode==="mines")
-        container.innerHTML=minesHTML();
-
-    if(state.casinoMode==="upgrader")
-        container.innerHTML=upgraderHTML();
-
-    if(state.casinoMode==="crash")
-        container.innerHTML=crashHTML();
-}
-
-/* ================= MINES ================= */
-
-function minesHTML(){
-
-    if(!state.mines){
-
-        state.mines={
-
-            active:false,
-
-            ended:false,
-
-            bet:0,
-
-            mines:5,
-
-            opened:[],
-
-            minePositions:[],
-
-            multiplier:1
-        };
-    }
-
-    const m=state.mines;
-
-    return `
-
-    <div class="page active">
-
-        <div class="gameHeader">
-
-            <button
-                class="back"
-                onclick="exitCasino()">
-                ‹
-            </button>
-
-            <div class="gameTitle">
-                💣 Мины
-            </div>
-
-        </div>
-
-        <div class="betBox">
-
-            <div class="betLabel">
-                Ставка
-            </div>
-
-            <input
-                id="mineBet"
-                class="betInput"
-                type="number"
-                value="${m.bet||100}">
-
-            <div class="betPresets">
-
-                ${
-                    [100,500,1000,5000]
-                    .map(
-                        x=>
-                        `<button
-                        class="preset"
-                        onclick="setMineBet(${x})">
-                        ${x}
-                        </button>`
-                    )
-                    .join("")
-                }
-
-            </div>
-
-            <div
-                style="
-                margin-top:13px;
-                color:var(--muted)">
-
-                Мин:
-
-                <select
-                    id="mineCount"
-                    class="input"
-                    style="margin-top:5px">
-
-                    ${
-                        [3,5,7,10]
-                        .map(
-                            x=>
-                            `<option
-                            value="${x}"
-                            ${
-                                m.mines===x?
-                                "selected":
-                                ""
-                            }>
-                            ${x}
-                            </option>`
-                        )
-                        .join("")
-                    }
-
-                </select>
-
-            </div>
-
-        </div>
-
-        <div
-            style="
-            display:flex;
-            justify-content:space-between;
-            margin-top:15px">
-
-            <span>
-                Множитель
-            </span>
-
-            <b>
-                ${m.multiplier.toFixed(2)}x
-            </b>
-
-        </div>
-
-        <div class="minesGrid">
-
-            ${
-                Array.from(
-                    {length:25},
-                    (_,i)=>{
-
-                        let cls="mineCell";
-
-                        let icon="";
-
-                        if(
-                            m.opened.includes(i)
-                        ){
-
-                            cls+=" open";
-
-                            if(
-                                m.minePositions
-                                .includes(i)
-                            ){
-
-                                cls+=" boom";
-
-                                icon="💥";
-
-                            }else{
-
-                                cls+=" win";
-
-                                icon="💎";
-                            }
-                        }
-
-                        return `
-
-                        <button
-                            class="${cls}"
-                            onclick="clickMine(${i})">
-
-                            ${icon}
-
-                        </button>
-                        `;
-                    }
-                ).join("")
-            }
-
-        </div>
-
-        ${
-            !m.active&&!m.ended?
-
-            `
-            <button
-                class="btn"
-                onclick="startMines()">
-
-                Начать игру
-
-            </button>
-            `
-
-            :
-
-            m.active?
-
-            `
-            <button
-                class="btn"
-                onclick="cashoutMines()">
-
-                Забрать
-                ${money(
-                    m.bet*m.multiplier
-                )}
-
-            </button>
-            `
-
-            :
-
-            `
-            <button
-                class="btn"
-                onclick="newMinesGame()">
-
-                Новая игра
-
-            </button>
-            `
-        }
-
-        <p
-            style="
-            color:var(--muted);
-            font-size:12px;
-            text-align:center">
-
-            Ставка списывается только при
-            начале игры. Выигрыш зачисляется
-            исключительно после кнопки «Забрать».
-
-        </p>
-
-    </div>
-    `;
-}
-
-window.setMineBet=function(n){
-
-    const input=
-        document.getElementById(
-            "mineBet"
-        );
-
-    if(input)
-        input.value=n;
-};
-
-window.startMines=function(){
-
-    const bet=
-        Number(
-            document.getElementById(
-                "mineBet"
-            ).value
-        );
-
-    const mines=
-        Number(
-            document.getElementById(
-                "mineCount"
-            ).value
-        );
-
-    if(
-        bet<=0||
-        bet>account.balance
-    ){
-
-        toast(
-            "Недостаточно средств"
-        );
-
-        sound("error");
-
-        return;
-    }
-
-    account.balance-=bet;
-
-    let positions=[];
-
-    while(
-        positions.length<mines
-    ){
-
-        const x=
-            Math.floor(
-                Math.random()*25
-            );
-
-        if(!positions.includes(x))
-            positions.push(x);
-    }
-
-    state.mines={
-
-        active:true,
-
-        ended:false,
-
-        bet,
-
-        mines,
-
-        opened:[],
-
-        minePositions:positions,
-
-        multiplier:1
-    };
-
-    addTx(
-        "Ставка — Мины",
-        -bet,
-        "💣"
-    );
-
-    save();
-
-    sound("click");
-
-    renderCasinoGame();
-
-    updateTopBalance();
-};
-
-window.clickMine=function(index){
-
-    const m=state.mines;
-
-    if(
-        !m||
-        !m.active||
-        m.opened.includes(index)
-    )
-        return;
-
-    m.opened.push(index);
-
-    if(
-        m.minePositions.includes(index)
-    ){
-
-        sound("boom");
-
-        m.active=false;
-
-        m.ended=true;
-
-        toast(
-            "💥 Вы проиграли"
-        );
-
-        renderCasinoGame();
-
-        updateTopBalance();
-
-        save();
-
-        return;
-    }
-
-    sound("success");
-
-    const safeOpened=
-        m.opened.length;
-
-    m.multiplier=
-        1+
-        safeOpened*
-        (
-            .16+
-            m.mines*.025
-        );
-
-    renderCasinoGame();
-};
-
-window.cashoutMines=function(){
-
-    const m=state.mines;
-
-    if(!m||!m.active)
-        return;
-
-    const winnings=
-        m.bet*m.multiplier;
-
-    account.balance+=winnings;
-
-    addTx(
-        "Выигрыш — Мины",
-        winnings,
-        "💎"
-    );
-
-    m.active=false;
-    m.ended=true;
-
-    save();
-
-    sound("win");
-
-    toast(
-        "Вы забрали "+
-        money(winnings)
-    );
-
-    renderCasinoGame();
-
-    updateTopBalance();
-};
-
-window.newMinesGame=function(){
-
-    state.mines=null;
-
-    renderCasinoGame();
-};
-
-/* ================= UPGRADER ================= */
-
-function upgraderHTML(){
-
-    return `
-
-    <div class="page active">
-
-        <div class="gameHeader">
-
-            <button
-                class="back"
-                onclick="exitCasino()">
-                ‹
-            </button>
-
-            <div class="gameTitle">
-                🎡 Upgrader
-            </div>
-
-        </div>
-
-        <div class="betBox">
-
-            <div class="betLabel">
-                Ставка
-            </div>
-
-            <input
-                id="upgradeBet"
-                class="betInput"
-                type="number"
-                value="1000">
-
-            <div class="betPresets">
-
-                ${
-                    [100,500,1000,5000]
-                    .map(
-                        x=>
-                        `
-                        <button
-                            class="preset"
-                            onclick="
-                            document.getElementById(
-                            'upgradeBet'
-                            ).value=${x}">
-
-                            ${x}
-
-                        </button>
-                        `
-                    )
-                    .join("")
-                }
-
-            </div>
-
-        </div>
-
-        <div class="wheelWrap">
-
-            <div class="pointer"></div>
-
-            <div
-                id="upgradeWheel"
-                class="wheel"
-                style="
-                transform:
-                rotate(
-                ${state.upgraderRotation}deg
-                )">
-            </div>
-
-        </div>
-
-        <div
-            style="
-            text-align:center;
-            color:var(--muted)">
-
-            Шанс выигрыша
-
-            <b style="color:white">
-                50%
-            </b>
-
-        </div>
-
-        <button
-            class="btn"
-            ${
-                state.upgraderSpinning?
-                "disabled":
-                ""
-            }
-            onclick="spinUpgrade()">
-
-            ${
-                state.upgraderSpinning?
-                "КРУТИТСЯ...":
-                "КРУТИТЬ"
-            }
-
-        </button>
-
-    </div>
-    `;
-}
-
-window.spinUpgrade=function(){
-
-    if(state.upgraderSpinning)
-        return;
-
-    const bet=
-        Number(
-            document.getElementById(
-                "upgradeBet"
-            ).value
-        );
-
-    if(
-        bet<=0||
-        bet>account.balance
-    ){
-
-        toast(
-            "Недостаточно средств"
-        );
-
-        sound("error");
-
-        return;
-    }
-
-    account.balance-=bet;
-
-    addTx(
-        "Ставка — Upgrader",
-        -bet,
-        "🎡"
-    );
-
-    save();
-
-    state.upgraderSpinning=true;
-
-    renderCasinoGame();
-
-    updateTopBalance();
-
-    const wheel=
-        document.getElementById(
-            "upgradeWheel"
-        );
-
-    const win=
-        Math.random()<.5;
-
-    const target=
-        win?
-        (
-            270+
-            Math.random()*150
-        ):
-        (
-            90+
-            Math.random()*150
-        );
-
-    const current=
-        (
-            state.upgraderRotation%360+
-            360
-        )%360;
-
-    let delta=
-        (target-current+360)%360;
-
-    if(delta<180)
-        delta+=360;
-
-    state.upgraderRotation+=
-        1800+
-        delta;
-
-    wheel.style.transform=
-        `rotate(
-        ${state.upgraderRotation}deg)`;
-
-    sound("click");
-
-    setTimeout(()=>{
-
-        state.upgraderSpinning=false;
-
-        if(win){
-
-            const winnings=
-                bet*2;
-
-            account.balance+=
-                winnings;
-
-            addTx(
-                "Выигрыш — Upgrader",
-                winnings,
-                "🎉"
-            );
-
-            sound("win");
-
-            toast(
-                "🎉 Победа! +"+
-                money(winnings)
-            );
-
-        }else{
-
-            sound("boom");
-
-            toast(
-                "💥 Не повезло"
-            );
-        }
-
-        save();
-
-        renderCasinoGame();
-
-        updateTopBalance();
-
-    },3650);
-};
-
-/* ================= CRASH ================= */
-
-function crashHTML(){
-
-    if(!state.crash){
-
-        state.crash={
-
-            phase:"bet",
-
-            countdown:10,
-
-            bet:0,
-
-            multiplier:1,
-
-            cashed:false,
-
-            timer:null,
-
-            countTimer:null,
-
-            crashPoint:0
-        };
-    }
-
-    const c=state.crash;
-
-    return `
-
-    <div class="page active">
-
-        <div class="gameHeader">
-
-            <button
-                class="back"
-                onclick="exitCasino()">
-                ‹
-            </button>
-
-            <div class="gameTitle">
-                🚀 Crash
-            </div>
-
-        </div>
-
-        <div class="crashArena">
-
-            <div class="stars"></div>
-
-            <div
-                id="crashX"
-                class="crashX">
-
-                X${c.multiplier.toFixed(2)}
-
-            </div>
-
-            <div
-                id="rocket"
-                class="rocket">
-
-                🚀
-
-            </div>
-
-        </div>
-
-        <div class="crashStatus">
-
-            ${
-                c.phase==="bet"
-
-                ?
-
-                `Сделайте ставку — ${c.countdown} сек.`
-
-                :
-
-                c.phase==="flying"
-
-                ?
-
-                "Ракета летит..."
-
-                :
-
-                "РАКЕТА ВЗОРВАЛАСЬ"
-            }
-
-        </div>
-
-        <div
-            class="betBox"
-            style="margin-top:15px">
-
-            <div class="betLabel">
-                Ставка
-            </div>
-
-            <input
-                id="crashBet"
-                class="betInput"
-                type="number"
-                value="${c.bet||1000}"
-                ${
-                    c.phase!=="bet"?
-                    "disabled":
-                    ""
-                }>
-
-        </div>
-
-        ${
-            c.phase==="bet"
-
-            ?
-
-            `
-            <button
-                class="btn"
-                onclick="placeCrashBet()">
-
-                Поставить
-
-            </button>
-            `
-
-            :
-
-            c.phase==="flying"
-
-            ?
-
-            `
-            <button
-                class="btn"
-                onclick="cashoutCrash()">
-
-                Забрать
-                ×${c.multiplier.toFixed(2)}
-
-            </button>
-            `
-
-            :
-
-            `
-            <button
-                class="btn"
-                onclick="restartCrash()">
-
-                Новая игра
-
-            </button>
-            `
-        }
-
-    </div>
-    `;
-}
-
-window.placeCrashBet=function(){
-
-    const bet=
-        Number(
-            document.getElementById(
-                "crashBet"
-            ).value
-        );
-
-    if(
-        bet<=0||
-        bet>account.balance
-    ){
-
-        toast(
-            "Недостаточно средств"
-        );
-
-        sound("error");
-
-        return;
-    }
-
-    const c=state.crash;
-
-    c.bet=bet;
-
-    c.cashed=false;
-
-    c.phase="bet";
-
-    c.countdown=10;
-
-    account.balance-=bet;
-
-    addTx(
-        "Ставка — Crash",
-        -bet,
-        "🚀"
-    );
-
-    save();
-
-    sound("click");
-
-    startCrashCountdown();
-
-    renderCasinoGame();
-
-    updateTopBalance();
-};
-
-function startCrashCountdown(){
-
-    const c=state.crash;
-
-    if(c.countTimer)
-        clearInterval(c.countTimer);
-
-    c.countdown=10;
-
-    c.countTimer=
-        setInterval(()=>{
-
-            c.countdown--;
-
-            if(c.countdown<=0){
-
-                clearInterval(
-                    c.countTimer
-                );
-
-                c.countTimer=null;
-
-                launchCrash();
-
-            }else{
-
-                renderCasinoGame();
-            }
-
-        },1000);
-}
-
-function launchCrash(){
-
-    const c=state.crash;
-
-    c.phase="flying";
-
-    c.multiplier=1;
-
-    c.crashPoint=
-        Math.max(
-            1.01,
-            1+
-            Math.random()*9
-        );
-
-    const start=
-        performance.now();
-
-    if(c.timer)
-        clearInterval(c.timer);
-
-    c.timer=
-        setInterval(()=>{
-
-            const elapsed=
-                (
-                    performance.now()-
-                    start
-                )/1000;
-
-            c.multiplier=
-                1+
-                Math.pow(
-                    elapsed,
-                    1.45
-                )*.42;
-
-            const x=
-                document.getElementById(
-                    "crashX"
-                );
-
-            const r=
-                document.getElementById(
-                    "rocket"
-                );
-
-            if(x){
-
-                x.textContent=
-                    "X"+
-                    c.multiplier.toFixed(2);
-            }
-
-            if(r){
-
-                const progress=
-                    Math.min(
-                        1,
-                        c.multiplier/
-                        c.crashPoint
-                    );
-
-                r.style.left=
-                    (
-                        15+
-                        progress*65
-                    )+"%";
-
-                r.style.bottom=
-                    (
-                        15+
-                        progress*65
-                    )+"%";
-            }
-
-            if(
-                c.multiplier>=
-                c.crashPoint
-            ){
-
-                c.multiplier=
-                    c.crashPoint;
-
-                clearInterval(c.timer);
-
-                c.timer=null;
-
-                crashEnd();
-            }
-
-        },50);
-
-    renderCasinoGame();
-}
-
-window.cashoutCrash=function(){
-
-    const c=state.crash;
-
-    if(
-        !c||
-        c.phase!=="flying"||
-        c.cashed
-    )
-        return;
-
-    c.cashed=true;
-
-    clearInterval(c.timer);
-
-    c.timer=null;
-
-    const winnings=
-        c.bet*c.multiplier;
-
-    account.balance+=
-        winnings;
-
-    addTx(
-        "Выигрыш — Crash",
-        winnings,
-        "🚀"
-    );
-
-    sound("win");
-
-    toast(
-        "Забрано "+
-        money(winnings)
-    );
-
-    c.phase="bet";
-
-    c.bet=0;
-
-    c.countdown=10;
-
-    save();
-
-    renderCasinoGame();
-
-    updateTopBalance();
-};
-
-function crashEnd(){
-
-    const c=state.crash;
-
-    c.phase="crashed";
-
-    sound("boom");
-
-    if(!c.cashed){
-
-        toast(
-            "💥 КРАШ!"
-        );
-    }
-
-    renderCasinoGame();
-}
-
-window.restartCrash=function(){
-
-    if(state.crash?.timer)
-        clearInterval(
-            state.crash.timer
-        );
-
-    if(state.crash?.countTimer)
-        clearInterval(
-            state.crash.countTimer
-        );
-
-    state.crash={
-
-        phase:"bet",
-
-        countdown:10,
-
-        bet:0,
-
-        multiplier:1,
-
-        cashed:false,
-
-        timer:null,
-
-        countTimer:null,
-
-        crashPoint:0
-    };
-
-    renderCasinoGame();
-};
-
-/* ================= EXIT ================= */
-
-function stopTransientTimers(){
-
-    if(state.crash?.timer)
-        clearInterval(
-            state.crash.timer
-        );
-
-    if(state.crash?.countTimer)
-        clearInterval(
-            state.crash.countTimer
-        );
-}
-
-window.exitCasino=function(){
-
-    if(
-        state.mines?.active
-    ){
-
-        toast(
-            "Сначала заберите выигрыш"
-        );
-
-        return;
-    }
-
-    if(
-        state.crash?.phase==="flying"
-    ){
-
-        toast(
-            "Игра ещё идёт"
-        );
-
-        return;
-    }
-
-    stopTransientTimers();
-
-    state.casinoMode=null;
-
-    state.mines=null;
-
-    state.crash=null;
-
-    state.upgraderSpinning=false;
-
-    render();
-};
-
-/* ================= CLICKER ================= */
-
-function clickerPage(){
-
-    if(state.page!=="clicker")
-        return `
-            <section class="page"></section>
-        `;
-
-    return `
-
-    <section class="page active">
-
-        <div class="sectionTitle">
-            Заработок
-        </div>
-
-        <div style="color:var(--muted)">
-            Нажимай и получай по 1 ₽
-        </div>
-
-        <div class="clicker">
-
-            <div
-                id="coin"
-                class="coin"
-                onclick="clickMoney(event)">
-
-                ₽
-
-            </div>
-
-        </div>
-
-        <div
-            class="card"
-            style="text-align:center">
-
-            <div
-                style="color:var(--muted)">
-
-                Заработано кликами
-
-            </div>
-
-            <div
-                style="
-                font-size:30px;
-                font-weight:900;
-                margin-top:5px">
-
-                ${money(account.clicker)}
-
-            </div>
-
-        </div>
-
-    </section>
-    `;
-}
-
-window.clickMoney=function(e){
-
-    account.balance+=1;
-
-    account.clicker+=1;
-
-    sound("money");
-
-    addTx(
-        "Кликер",
-        1,
-        "₽"
-    );
-
-    save();
-
-    const el=
-        document.createElement(
-            "div"
-        );
-
-    el.className="floatMoney";
-
-    el.textContent="+1 ₽";
-
-    el.style.left=
-        (e.clientX-20)+"px";
-
-    el.style.top=
-        (e.clientY-30)+"px";
-
-    document.body.appendChild(el);
-
-    setTimeout(
-        ()=>el.remove(),
-        1000
-    );
-
-    render();
-};
-
-/* ================= HISTORY ================= */
-
-function historyPage(){
-
-    if(state.page!=="history")
-        return `
-            <section class="page"></section>
-        `;
-
-    return `
-
-    <section class="page active">
-
-        <div class="sectionTitle">
-            История
-        </div>
-
-        <div class="card">
-
-            ${
-                account.transactions.length
-
-                ?
-
-                account.transactions
-                    .map(transaction)
-                    .join("")
-
-                :
-
-                `
-                <div
-                    style="
-                    text-align:center;
-                    color:var(--muted);
-                    padding:30px">
-
-                    История пуста
-
-                </div>
-                `
-            }
-
-        </div>
-
-    </section>
-    `;
-}
-
-/* ================= PROFILE ================= */
-
-function profilePage(){
-
-    if(state.page!=="profile")
-        return `
-            <section class="page"></section>
-        `;
-
-    return `
-
-    <section class="page active">
-
-        <div class="profileHead">
-
-            <div class="avatar">
-
-                ${escapeHTML(
-                    account.name
-                    .charAt(0)
-                    .toUpperCase()
-                )}
-
-            </div>
-
-            <div class="profileName">
-                ${escapeHTML(account.name)}
-            </div>
-
-            <div class="username">
-                @${escapeHTML(account.username)}
-            </div>
-
-        </div>
-
-        <button
-            class="menuItem"
-            onclick="cardOffer()">
-
-            <span>
-                💳
-            </span>
-
-            <b>
-                ${
-                    account.card?
-                    "Виртуальная карта":
-                    "Оформить виртуальную карту"
-                }
-            </b>
-
-            <span>
-                ›
-            </span>
-
-        </button>
-
-        <button
-            class="menuItem"
-            onclick="themes()">
-
-            <span>
-                🎨
-            </span>
-
-            <b>
-                Тема приложения
-            </b>
-
-            <span>
-                ›
-            </span>
-
-        </button>
-
-        <button
-            class="menuItem"
-            onclick="
-                sound('success');
-                toast('Звуки включены')
-            ">
-
-            <span>
-                🔊
-            </span>
-
-            <b>
-                Звуки
-            </b>
-
-            <span>
-                Вкл.
-            </span>
-
-        </button>
-
-        <button
-            class="menuItem"
-            onclick="logout()">
-
-            <span>
-                🚪
-            </span>
-
-            <b>
-                Выйти из аккаунта
-            </b>
-
-            <span>
-                ›
-            </span>
-
-        </button>
-
-        <button
-            class="menuItem danger"
-            onclick="deleteAccount()">
-
-            <span>
-                🗑️
-            </span>
-
-            <b>
-                Удалить аккаунт
-            </b>
-
-            <span>
-                ›
-            </span>
-
-        </button>
-
-    </section>
-    `;
-}
-
-/* ================= CARD ================= */
-
-window.cardOffer=function(){
-
-    if(account.card){
-
-        modal(`
-
-            <h2>
-                💳 Виртуальная карта
-            </h2>
-
-            <div
-                class="card"
-                style="
-                margin-top:15px;
-                background:
-                linear-gradient(
-                135deg,
-                var(--accent),
-                var(--accent2)
-                )">
-
-                <div
-                    style="
-                    font-size:22px;
-                    font-weight:900">
-
-                    svtvn банк
-
-                </div>
-
-                <div
-                    style="margin-top:50px">
-
-                    ${escapeHTML(
-                        account.card
-                    )}
-
-                </div>
-
-                <div
-                    style="margin-top:25px">
-
-                    ${escapeHTML(
-                        account.name.toUpperCase()
-                    )}
-
-                </div>
-
-            </div>
-
-            <button
-                class="btn secondary"
-                onclick="closeModal()">
-
-                Закрыть
-
-            </button>
-        `);
-
-        return;
-    }
-
-    modal(`
-
-        <h2>
-            💳 Виртуальная карта
-        </h2>
-
-        <p style="color:var(--muted)">
-            Выпустите виртуальную карту
-            совершенно бесплатно.
-        </p>
-
-        <button
-            class="btn"
-            onclick="createCard()">
-
-            Выпустить карту
-
-        </button>
-
-        <button
-            class="btn secondary"
-            onclick="closeModal()">
-
-            Отмена
-
-        </button>
-
-    `);
-};
-
-window.createCard=function(){
-
-    account.card=
-        randomCard();
-
-    save();
-
-    closeModal();
-
-    sound("success");
-
-    toast(
-        "Карта успешно выпущена"
-    );
-
-    render();
-};
-
-/* ================= THEMES ================= */
-
-window.themes=function(){
-
-    modal(`
-
-        <h2>
-            🎨 Тема приложения
-        </h2>
-
-        <p style="color:var(--muted)">
-            Выберите оформление SVTVN BANK.
-        </p>
-
-        <button
-            class="menuItem"
-            onclick="setTheme('midnight')">
-
-            <span>🌌</span>
-
-            <b>
-                Midnight
-            </b>
-
-            <span>›</span>
-
-        </button>
-
-        <button
-            class="menuItem"
-            onclick="setTheme('graphite')">
-
-            <span>⚫</span>
-
-            <b>
-                Graphite
-            </b>
-
-            <span>›</span>
-
-        </button>
-
-        <button
-            class="menuItem"
-            onclick="setTheme('slate')">
-
-            <span>🩶</span>
-
-            <b>
-                Slate
-            </b>
-
-            <span>›</span>
-
-        </button>
-
-        <button
-            class="menuItem"
-            onclick="setTheme('ocean')">
-
-            <span>🌊</span>
-
-            <b>
-                Ocean
-            </b>
-
-            <span>›</span>
-
-        </button>
-
-        <button
-            class="menuItem"
-            onclick="setTheme('forest')">
-
-            <span>🌲</span>
-
-            <b>
-                Forest
-            </b>
-
-            <span>›</span>
-
-        </button>
-
-        <button
-            class="menuItem"
-            onclick="setTheme('light')">
-
-            <span>☀️</span>
-
-            <b>
-                Light
-            </b>
-
-            <span>›</span>
-
-        </button>
-
-    `);
-};
-
-window.setTheme=function(t){
-
-    account.theme=t;
-
-    save();
-
-    closeModal();
-
-    sound("success");
-
-    render();
-};
-
-/* ================= DELETE ================= */
-
-window.deleteAccount=function(){
-
-    modal(`
-
-        <h2>
-            Удалить аккаунт?
-        </h2>
-
-        <p style="color:var(--muted)">
-
-            Будут удалены баланс,
-            карта, история операций
-            и настройки из этого браузера.
-
-        </p>
-
-        <button
-            class="btn dangerBtn"
-            onclick="confirmDelete()">
-
-            Удалить аккаунт
-
-        </button>
-
-        <button
-            class="btn secondary"
-            onclick="closeModal()">
-
-            Отмена
-
-        </button>
-
-    `);
-};
-
-window.confirmDelete=function(){
-
-    localStorage.removeItem(KEY);
-
-    account=null;
-
-    closeModal();
-
-    sound("boom");
-
-    setTimeout(
-        ()=>authScreen(true),
-        200
-    );
-};
-
-/* ================= LOGOUT ================= */
-
-window.logout=function(){
-
-    if(!account)
-        return;
-
-    stopTransientTimers();
-
-    state={
-
-        page:"home",
-
-        casinoMode:null,
-
-        mines:null,
-
-        upgraderSpinning:false,
-
-        upgraderRotation:0,
-
-        crash:null
-    };
-
-    pinScreen();
-};
-
-/* ================= MODAL ================= */
-
-function modal(html){
-
-    const old=
-        document.getElementById(
-            "modal"
-        );
-
-    if(old)
-        old.remove();
-
-    const m=
-        document.createElement(
-            "div"
-        );
-
-    m.id="modal";
-
-    m.className=
-        "modal show";
-
-    m.innerHTML=`
-
-        <div class="sheet">
-
-            ${html}
-
-        </div>
-    `;
-
-    document.body.appendChild(m);
-}
-
-window.closeModal=function(){
-
-    const m=
-        document.getElementById(
-            "modal"
-        );
-
-    if(m)
-        m.remove();
-};
-
-/* ================= TOP BALANCE ================= */
-
-function updateTopBalance(){
-
-    const el=
-        document.querySelector(
-            ".topBalance"
-        );
-
-    if(el)
-        el.textContent=
-            money(account.balance);
-}
-
-/* ================= START ================= */
-
-if(!account){
-
-    authScreen(true);
-
-}else{
-
-    pinScreen();
-}
+init();
 
 </script>
 
